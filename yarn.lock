@@ -119,7 +119,7 @@
   resolved "https://registry.yarnpkg.com/@types/long/-/long-3.0.32.tgz#f4e5af31e9e9b196d8e5fca8a5e2e20aa3d60b69"
   integrity sha512-ZXyOOm83p7X8p3s0IYM3VeueNmHpkk/yMlP8CLeOnEcu6hIwPH7YjZBvhQkR0ZFS2DqZAxKtJ/M5fcuv3OU5BA==
 
-"@types/node@^10.1.0":
+"@types/node@>6", "@types/node@^10.1.0":
   version "10.12.10"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.10.tgz#4fa76e6598b7de3f0cb6ec3abacc4f59e5b3a2ce"
   integrity sha512-8xZEYckCbUVgK8Eg7lf5Iy4COKJ5uXlnIOnePN0WUwSQggy9tolM+tDJf7wMOnT/JT/W9xDYIaYggt3mRV2O5w==
@@ -352,6 +352,13 @@ long@^4.0.0:
   resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
   integrity sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==
 
+macro-inferno@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/macro-inferno/-/macro-inferno-0.2.2.tgz#57dd960f9fa3e117ef9f46dbf0629d08d1d04c5f"
+  integrity sha512-ouyDKrSzOdZVm7ViR/W9+qRPtrZ2Ml3QD4NNekXrMbAjN32xD1C/lRYl3t0Bf/sG5elNnBEzVfLr93HNzheSQw==
+  dependencies:
+    nan "^2.7.0"
+
 minimatch@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
@@ -396,10 +403,17 @@ ms@2.0.0:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
   integrity sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=
 
-nan@^2.11.1:
+nan@^2.11.0, nan@^2.11.1, nan@^2.7.0:
   version "2.11.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.1.tgz#90e22bccb8ca57ea4cd37cc83d3819b52eea6766"
   integrity sha512-iji6k87OSXa0CcrLl9z+ZiYSuR2o+c0bGuNmXdrhTQTakxytAFsC56SArGYoiHlJlFoHSnvmhpceZJaXkVuOtA==
+
+native-node-utils@0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/native-node-utils/-/native-node-utils-0.1.4.tgz#7223c70786a952868ea5d125b4810053c165dcec"
+  integrity sha512-RLc/NI9UdLhxHLMtUsmSpr7+nU1LWKSQdQb6t8DpmUi/Rled2/gemPg05lJ38TSDfOHdUI2XCv7mTCQvw/tsPQ==
+  dependencies:
+    nan "^2.11.0"
 
 needle@^2.2.1:
   version "2.2.4"
@@ -447,7 +461,7 @@ npm-packlist@^1.1.6:
     ignore-walk "^3.0.1"
     npm-bundled "^1.0.1"
 
-npmlog@^4.0.2:
+npmlog@^4.0.2, npmlog@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/npmlog/-/npmlog-4.1.2.tgz#08a7f2a8bf734604779a9efa4ad5cc717abb954b"
   integrity sha512-2uUqazuKlTaSI/dC8AzicUck7+IrEaOnN/e0jd3Xtt1KcGpwx30v50mL7oPyr/h9bL3E4aZccVwpwP+5W9Vjkg==
@@ -473,6 +487,25 @@ once@^1.3.0:
   integrity sha1-WDsap3WWHUsROsF9nFC6753Xa9E=
   dependencies:
     wrappy "1"
+
+opencv-build@0.0.15:
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/opencv-build/-/opencv-build-0.0.15.tgz#14c15ed2edada9f1ab3283ec4dda11625e356fc4"
+  integrity sha512-jMZzFBPOuyAVWHBqp6J3G7KBuEJhPBM5Gm+7TFvbtfaKUvlbnQzHX+4n7wM7qasAYe8SacNFOqNHgiHd5kHtQA==
+  dependencies:
+    npmlog "^4.1.2"
+
+opencv4nodejs@^4.10.1:
+  version "4.10.1"
+  resolved "https://registry.yarnpkg.com/opencv4nodejs/-/opencv4nodejs-4.10.1.tgz#9d8ca99a5535571c925164515cec7a9e37851f5c"
+  integrity sha512-tEemzfVQ69OKuUXMlwtlachRxR3LqdKyl3ctOe/jpSDw8CmldOuO0Tl2znePIQLbTvwbjrubBdGMCndOWB0x+g==
+  dependencies:
+    macro-inferno "^0.2.2"
+    nan "^2.11.0"
+    native-node-utils "0.1.4"
+    opencv-build "0.0.15"
+  optionalDependencies:
+    "@types/node" ">6"
 
 os-homedir@^1.0.0:
   version "1.0.2"
