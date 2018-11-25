@@ -2,11 +2,21 @@
   "name": "cam-id",
   "version": "1.0.0",
   "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --baseUrl .",
+    "prepare": "npm run build",
+    "gather": "node build/gather.js",
+    "train": "node build/train.js",
+    "recognize": "node build/recognize.js"
+  },
   "license": "MIT",
   "dependencies": {
-    "@tensorflow/tfjs-node": "^0.1.21",
-    "canvas": "^2.1.0",
-    "face-api.js": "^0.16.1",
+    "@tensorflow/tfjs-node-gpu": "^0.1.21",
+    "face-recognition": "^0.9.4",
     "opencv4nodejs": "^4.10.1"
+  },
+  "devDependencies": {
+    "typescript": "^3.1.6"
   }
 }
