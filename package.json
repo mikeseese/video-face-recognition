@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "@tensorflow/tfjs-node-gpu": "^0.1.21",
-    "face-recognition": "^0.9.4",
+    "@seesemichaelj/face-recognition": "0.9.4-smj-0",
     "opencv4nodejs": "^4.10.1"
   },
   "devDependencies": {

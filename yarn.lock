@@ -55,6 +55,16 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
+"@seesemichaelj/face-recognition@0.9.4-smj-0":
+  version "0.9.4-smj-0"
+  resolved "https://registry.yarnpkg.com/@seesemichaelj/face-recognition/-/face-recognition-0.9.4-smj-0.tgz#23c62d0a658fda27a1c66be4fb879daf7fcba4e0"
+  integrity sha512-n9nGg5E82WCg5D3bbGC7KmHd7ia95E5yw4JVpsaF6JmFy2wdJtx1Ns+7o7vUk7HsPjSvk5pHaNSiE8MPceagcA==
+  dependencies:
+    dlib-build "^0.1.1"
+    face-recognition-models "0.0.0"
+    nan "^2.7.0"
+    native-node-utils "0.0.4"
+
 "@tensorflow/tfjs-converter@0.6.7":
   version "0.6.7"
   resolved "https://registry.yarnpkg.com/@tensorflow/tfjs-converter/-/tfjs-converter-0.6.7.tgz#d45c5f17c5c3de638ded5354d16d450a8cb97676"
@@ -214,16 +224,6 @@ face-recognition-models@0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/face-recognition-models/-/face-recognition-models-0.0.0.tgz#9eb3068356a7db9504bee5cbe5b25b7bffe03582"
   integrity sha512-h3teFmhFxGvbDZ4fXWcgsUFTatvluwBWerlpzL3yqZG6y1heIIkg5CJxlXL5k4NPgLjvskdUOtuM0b8YYHztxg==
-
-face-recognition@^0.9.4:
-  version "0.9.4"
-  resolved "https://registry.yarnpkg.com/face-recognition/-/face-recognition-0.9.4.tgz#a493696efccfa20c72c20ea3573263b40d209d73"
-  integrity sha512-MSCEFG9Yp5ay7h8mrApCXBYTkOMhlaDbPnJepDocG3Hwhco0t7ny/GCMNK7MB2hV9gDSSxPrj4zX3pAIQyFylQ==
-  dependencies:
-    dlib-build "^0.1.1"
-    face-recognition-models "0.0.0"
-    nan "^2.7.0"
-    native-node-utils "0.0.4"
 
 fs-minipass@^1.2.5:
   version "1.2.5"

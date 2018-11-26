@@ -2,7 +2,7 @@
 import * as cv from "opencv4nodejs";
 import * as fs from "fs";
 import * as path from "path";
-import * as fr from "face-recognition";
+import * as fr from "@seesemichaelj/face-recognition";
 
 fr.withCv(cv);
 fr.winKillProcessOnExit();

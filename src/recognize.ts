@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as cv from "opencv4nodejs";
-import * as fr from "face-recognition";
+import * as fr from "@seesemichaelj/face-recognition";
 
 fr.withCv(cv);
 fr.winKillProcessOnExit();
@@ -30,7 +30,7 @@ while (!done) {
     //
   }
 
-  frame.drawRectangle(fr.toCvRect(rect), new cv.Vec3(0, 0, 255));
+  //frame.drawRectangle(fr.toCvRect(rect), new cv.Vec3(0, 0, 255));
 
   cv.imshow('blah', frame);
   const key = cv.waitKey(100);
