@@ -8,12 +8,13 @@
     "prepare": "npm run build",
     "gather": "node build/gather.js",
     "train": "node build/train.js",
-    "recognize": "node build/recognize.js"
+    "recognize": "node build/recognize.js",
+    "plot": "node build/plot.js"
   },
   "license": "MIT",
   "dependencies": {
-    "@tensorflow/tfjs-node-gpu": "^0.1.21",
     "@seesemichaelj/face-recognition": "0.9.4-smj-0",
+    "@tensorflow/tfjs-node-gpu": "^0.1.21",
     "opencv4nodejs": "^4.10.1"
   },
   "devDependencies": {
