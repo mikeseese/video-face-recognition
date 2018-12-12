@@ -1,6 +1,6 @@
 {
-  "name": "cam-id",
-  "version": "1.0.0",
+  "name": "video-face-recognition",
+  "version": "1.0.0-alpha.0",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
