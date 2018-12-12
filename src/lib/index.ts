@@ -1,9 +1,7 @@
 import Session from "./session";
 import Faceprint from "./faceprint";
 
-const CamID = {
+export default {
   Session,
   Faceprint
 };
-
-export default CamID;
