@@ -12,7 +12,7 @@
         <slot name="selector"></slot>
       </div>
       <div
-        class="header-elem-wrapper navbar-text flex offset--md3 md5 d-none d-lg-flex">
+        class="header-elem-wrapper navbar-text flex offset--md3 md7 d-none d-lg-flex">
         <slot name="center"></slot>
       </div>
       <slot></slot>
