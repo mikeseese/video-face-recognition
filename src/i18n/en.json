@@ -175,6 +175,11 @@
     "spanish": "Spanish"
   },
   "menu": {
+    "train": "Train",
+    "logs": "Logs",
+    "config": "Config",
+    "settings": "Settings",
+    "system": "System",
     "auth": "Auth",
     "buttons": "Buttons",
     "charts": "Charts",

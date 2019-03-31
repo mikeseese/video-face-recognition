@@ -9,6 +9,41 @@
           <span>{{ $t('menu.dashboard') }}</span>
         </span>
       </sidebar-link>
+      <sidebar-link
+        :to="{ name: 'train' }">
+        <span slot="title">
+          <span
+            class="sidebar-menu-item-icon vuestic-icon vuestic-icon-statistics"></span>
+          <span>{{ $t('menu.train') }}</span>
+        </span>
+      </sidebar-link>
+      <sidebar-link
+        :to="{ name: 'logs' }">
+        <span slot="title">
+          <span
+            class="sidebar-menu-item-icon vuestic-icon vuestic-icon-tables"></span>
+          <span>{{ $t('menu.logs') }}</span>
+        </span>
+      </sidebar-link>
+      <sidebar-link-group>
+        <span slot="title">
+          <span
+            class="sidebar-menu-item-icon vuestic-icon vuestic-icon-settings"></span>
+          <span>{{ $t('menu.config') }}</span>
+        </span>
+        <sidebar-link
+          :to="{ name: 'settings' }">
+          <span slot="title">
+            <span>{{ $t('menu.settings') }}</span>
+          </span>
+        </sidebar-link>
+        <sidebar-link
+          :to="{ name: 'system' }">
+          <span slot="title">
+            <span>{{ $t('menu.system') }}</span>
+          </span>
+        </sidebar-link>
+      </sidebar-link-group>
       <sidebar-link-group>
         <span slot="title">
           <span
@@ -193,43 +228,6 @@
           target="_blank">
           <span slot="title">
             <span>{{ $t('menu.signUp') }}</span>
-          </span>
-        </sidebar-link>
-      </sidebar-link-group>
-      <sidebar-link-group>
-        <span slot="title">
-          <span
-            class="sidebar-menu-item-icon vuestic-icon vuestic-icon-maps"></span>
-          <span>{{ $t('menu.maps') }}</span>
-        </span>
-        <sidebar-link
-          :to="{ name: 'google-maps' }">
-          <span slot="title">
-            <span>{{ 'Google Maps' }}</span>
-          </span>
-        </sidebar-link>
-        <sidebar-link
-          :to="{ name: 'yandex-maps' }">
-          <span slot="title">
-            <span>{{ 'Yandex Maps' }}</span>
-          </span>
-        </sidebar-link>
-        <sidebar-link
-          :to="{ name: 'leaflet-maps' }">
-          <span slot="title">
-            <span>{{ 'Leaflet Maps' }}</span>
-          </span>
-        </sidebar-link>
-        <sidebar-link
-          :to="{ name: 'bubble-maps' }">
-          <span slot="title">
-            <span>{{ $t('Bubble Maps') }}</span>
-          </span>
-        </sidebar-link>
-        <sidebar-link
-          :to="{ name: 'line-maps' }">
-          <span slot="title">
-            <span>{{ $t('Line Maps') }}</span>
           </span>
         </sidebar-link>
       </sidebar-link-group>
