@@ -29,7 +29,7 @@ The `initialize-and-start.sh` and `destroy.sh` scripts will run `docker-compose 
 The `start.sh`, `stop.sh`, and `restart.sh` scripts in this directory are just wrappers around `docker-compose start|stop|restart`.
 
 ### Maintenance Mode
-A helper `maintenance.sh` script is also available. `./maintenance.sh start` will run `./stop.sh` and start a lightweight webserver to display a maintenance page. `./maintenance.sh stop` will stop the maintenace page webserver and run `./start.sh`. You may style the maintenance page at `[maintenance/index.html](maintenance/index.html)`.
+A helper `maintenance.sh` script is also available. `./maintenance.sh start` will run `./stop.sh` and start a lightweight webserver to display a maintenance page. `./maintenance.sh stop` will stop the maintenace page webserver and run `./start.sh`. You may style the maintenance page at [maintenance/index.html](maintenance/index.html).
 
 ### Export/Import Persistent Data
 If you need to export/import persistent data for any reason (regular backups, hardware issues/upgrades, etc.), there are two helper scripts for that as well.
