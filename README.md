@@ -22,6 +22,8 @@ Contributors are definitely welcome! I'm active on GitHub and will review PRs in
 
 ## Management
 
+The `install-arm64-deps.sh` script does not add the user to the `docker` user group for security reasons. Most of these scripts will need to be executed with `sudo` because of this. You can read on how non-root users can manage docker [here](https://docs.docker.com/install/linux/linux-postinstall/#manage-docker-as-a-non-root-user).
+
 ### Initialize/Destroy
 The `initialize-and-start.sh` and `destroy.sh` scripts will run `docker-compose up -d` and `docker-compose down` commands respectively. These will create and destroy containers. While the services write any persistent data to disk in the `.data` folder and should seem unaffected from a `down/destroy` command, this should just kept in mind that they will destroy the docker containers. You may want to use `stop/start/restart` functionality for your specific use case (despite at the time of writing this, it shouldn't really matter).
 
@@ -29,7 +31,7 @@ The `initialize-and-start.sh` and `destroy.sh` scripts will run `docker-compose 
 The `start.sh`, `stop.sh`, and `restart.sh` scripts in this directory are just wrappers around `docker-compose start|stop|restart`.
 
 ### Maintenance Mode
-A helper `maintenance.sh` script is also available. `./maintenance.sh start` will run `./stop.sh` and start a lightweight webserver to display a maintenance page. `./maintenance.sh stop` will stop the maintenace page webserver and run `./start.sh`. You may style the maintenance page at [maintenance/index.html](maintenance/index.html).
+A helper `maintenance.sh` script is also available. `sudo ./maintenance.sh start` will run `sudo ./stop.sh` and start a lightweight webserver to display a maintenance page. `sudo ./maintenance.sh stop` will stop the maintenace page webserver and run `sudo ./start.sh`. You may style the maintenance page at [maintenance/index.html](maintenance/index.html).
 
 ### Export/Import Persistent Data
 If you need to export/import persistent data for any reason (regular backups, hardware issues/upgrades, etc.), there are two helper scripts for that as well.
@@ -44,9 +46,9 @@ Running `./export.sh` will create a compressed tarball of the `.data` directory 
 #### Import
 Before importing **you should [stop the VFR system](#startstoprestart) or put it in [maintenance mode](#maintenance-mode).**
 
-Copy the tarball that you had previously [exported](#export) to this directory. Run `./import.sh <vfr-export-YYYYmmdd-HHMMss.tar.gz>`.
+Copy the tarball that you had previously [exported](#export) to this directory. Run `sudo ./import.sh <vfr-export-YYYYmmdd-HHMMss.tar.gz>`.
 
-For safe keeping, `import.sh` will conduct an `export` before importing to prevent data loss since importing will overwrite the `.data` directly completely. You can disable the preliminary export (**though this will delete your `.data` directory upon import!**) by adding the `--no-backup` argument: `./import.sh --no-backup <vfr-export-YYYYmmdd-HHMMss.tar.gz>`
+For safe keeping, `import.sh` will conduct an `export` before importing to prevent data loss since importing will overwrite the `.data` directly completely. You can disable the preliminary export (**though this will delete your `.data` directory upon import!**) by adding the `--no-backup` argument: `sudo ./import.sh --no-backup <vfr-export-YYYYmmdd-HHMMss.tar.gz>`
 
 ### Clean Persistent Data
 :warning: **YOU WILL LOSE ALL OF YOUR TRAINED FACIAL MODELS, DASHBOARD USER INFORMATION, LOGS, ETC**
