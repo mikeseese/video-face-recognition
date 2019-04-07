@@ -8,6 +8,12 @@ services:
     restart: always
     networks:
       - video-face-recognition
+    volumes:
+      - model-data:/app/models
+    devices:
+      - /dev/video0:/dev/video0
+    depends_on:
+      - persistence
 
   dashboard:
     container_name: vfr-dashboard
@@ -16,6 +22,11 @@ services:
     restart: always
     networks:
       - video-face-recognition
+    ports:
+      - 9000:8080
+    depends_on:
+      - persistence
+      - core
 
   persistence:
     container_name: vfr-persistence
@@ -26,9 +37,12 @@ services:
       - video-face-recognition
     volumes:
       - db-data:/var/lib/postgresql/data
+    ports:
+      - 9001:5432
 
 networks:
   video-face-recognition:
 
 volumes:
   db-data: ../.data/persistence
+  model-data: ../.data/models
