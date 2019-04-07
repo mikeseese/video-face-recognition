@@ -1,9 +1,34 @@
 version: '3.1'
 
 services:
-
   core:
+    container_name: vfr-core
+    image: videofacerecognition/core
+    build: ../core
+    restart: always
+    networks:
+      - video-face-recognition
 
   dashboard:
+    container_name: vfr-dashboard
+    image: videofacerecognition/dashboard
+    build: ../dashboard
+    restart: always
+    networks:
+      - video-face-recognition
 
   persistence:
+    container_name: vfr-persistence
+    image: videofacerecognition/persistence
+    build: ../persistence
+    restart: always
+    networks:
+      - video-face-recognition
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+networks:
+  video-face-recognition:
+
+volumes:
+  db-data: ../.data/persistence
