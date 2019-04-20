@@ -1,5 +1,5 @@
 {
-  "name": "video-face-recognition",
+  "name": "@video-face-recognition/core",
   "version": "1.0.0-alpha.0",
   "main": "dist/lib/index.js",
   "scripts": {
@@ -13,8 +13,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@seesemichaelj/face-recognition": "0.9.4-smj-0",
-    "opencv4nodejs": "^4.10.1"
+    "@video-face-recognition/face-recognition": "0.9.4-vfr.0",
+    "@video-face-recognition/opencv4nodejs": "^4.10.1-vfr.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
