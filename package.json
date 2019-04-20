@@ -13,7 +13,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@video-face-recognition/face-recognition": "0.9.4-vfr.0",
+    "@video-face-recognition/face-recognition": "^0.9.4-vfr.0",
     "@video-face-recognition/opencv4nodejs": "^4.10.1-vfr.0"
   },
   "devDependencies": {
