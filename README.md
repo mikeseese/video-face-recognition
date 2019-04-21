@@ -15,10 +15,19 @@ Contributors are definitely welcome! I'm active on GitHub and will review PRs in
 - [Setup](https://github.com/SeesePlusPlus/vfr-setup) - This repository. Contains the `docker-compose.yml` file and helper scripts that bring the other components/services together.
 
 ## Initial Setup
-1. `sudo ./install-arm64-deps.sh`
+1. `./install-arm64-deps.sh` (don't use `sudo` as it installs stuff in the user folder, it will prompt for a `sudo` password)
     - This script installs Docker CE and Docker Compose dependencies necessary for running the VFR system. Since it targets the TX2 board, it installs Docker CE for the `arm64` architecture.
 1. `sudo ./initialize-and-start.sh`
     - This script runs `docker-compose up -d` which will create the containers
+
+### Issues with NVIDIA SDK Manager installing libraries
+I had issues with NVIDIA's SDK Manager installing the appropriate libraries. It downloaded them into my `~/Downloads/sdkm_downloads` folder on the host machine; I then used `scp` to transfer them manually to the TX2 and install the ones I wanted by navigating to the appropriate directory and running the below commands:
+- `sudo dpkg -i cuda-repo-l4t-10-0-local-10.0.166_1.0-1_arm64.deb`
+- `sudo dpkg -i /var/cuda-repo-10-0-local-10.0.166/*.deb`
+- `sudo dpkg -i libcudnn7_7.3.1.28-1+cuda10.0_arm64.deb`
+- `sudo dpkg -i libcudnn7-dev_7.3.1.28-1+cuda10.0_arm64.deb`
+- `sudo dpkg -i libopencv_3.3.1-2-g31ccdfe11_arm64.deb`
+- `sudo dpkg -i libopencv-dev_3.3.1-2-g31ccdfe11_arm64.deb`
 
 ## Management
 
