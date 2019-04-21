@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as cv from "opencv4nodejs";
-import * as fr from "@seesemichaelj/face-recognition";
+import * as fr from "@video-face-recognition/face-recognition";
 
 fr.withCv(cv);
 fr.winKillProcessOnExit();
@@ -9,9 +9,9 @@ fr.winKillProcessOnExit();
 const detector = fr.FaceDetector();
 const recognizer = fr.FaceRecognizer();
 
-const expectedNumArgs = 3;
-if (process.argv.length !== expectedNumArgs) {
-  throw new Error(`Received ${process.argv.length - 2} arguments, expected ${expectedNumArgs}`);
+const expectedNumArgs = 1;
+if (process.argv.length - 2 !== expectedNumArgs) {
+  throw new Error(`Received ${process.argv.length - 2} arguments, expected ${expectedNumArgs} (path to the model.json file)`);
 }
 
 const model = process.argv[2];
@@ -19,7 +19,11 @@ const model = process.argv[2];
 recognizer.load(require(path.resolve(model)));
 console.log(recognizer.getDescriptorState());
 
-const cap = new cv.VideoCapture(0);
+if (!process.env.VFR_VIDEO_DEVICE_NUM) {
+  throw new Error("Environment variable VFR_VIDEO_DEVICE_NUM not set, used for cv.VideoCapture(VFR_VIDEO_DEVICE_NUM)");
+}
+
+const cap = new cv.VideoCapture(parseInt(process.env.VFR_VIDEO_DEVICE_NUM));
 
 let done = false;
 while (!done) {

@@ -1,5 +1,5 @@
 import * as path from "path";
-import * as fr from "@seesemichaelj/face-recognition";
+import * as fr from "@video-face-recognition/face-recognition";
 
 const expectedNumArgs = 3;
 if (process.argv.length !== expectedNumArgs) {

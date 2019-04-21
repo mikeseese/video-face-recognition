@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fs from "fs";
-import * as fr from "@seesemichaelj/face-recognition";
+import * as fr from "@video-face-recognition/face-recognition";
 import CamID from "../../lib";
 
 const tests = (model: fr.FaceDescriptor[], baseDirectory: string) => {

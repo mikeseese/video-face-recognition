@@ -1,4 +1,4 @@
-import * as fr from "@seesemichaelj/face-recognition";
+import * as fr from "@video-face-recognition/face-recognition";
 import Faceprint from "./faceprint";
 
 export default class Session {
