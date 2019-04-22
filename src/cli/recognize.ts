@@ -1,7 +1,9 @@
-import * as fs from "fs";
 import * as path from "path";
 import * as cv from "opencv4nodejs";
 import * as fr from "@video-face-recognition/face-recognition";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 fr.withCv(cv);
 fr.winKillProcessOnExit();
@@ -19,45 +21,33 @@ const model = process.argv[2];
 recognizer.load(require(path.resolve(model)));
 console.log(recognizer.getDescriptorState());
 
-if (!process.env.VFR_VIDEO_DEVICE_NUM) {
-  throw new Error("Environment variable VFR_VIDEO_DEVICE_NUM not set, used for cv.VideoCapture(VFR_VIDEO_DEVICE_NUM)");
+if (!process.env.VFR_VIDEO_DEVICE_NUM || !process.env.VFR_VIDEO_FPS) {
+  throw new Error(`Environment variables VFR_VIDEO_DEVICE_NUM or process.env.VFR_VIDEO_FPS ` +
+    `not set, used for cv.VideoCapture(VFR_VIDEO_DEVICE_NUM)") and cap.set(cv.CAP_PROP_FPS, process.env.VFR_VIDEO_FPS);`);
 }
 
 const cap = new cv.VideoCapture(parseInt(process.env.VFR_VIDEO_DEVICE_NUM));
+cap.set(cv.CAP_PROP_FPS, parseInt(process.env.VFR_VIDEO_FPS));
 
 let done = false;
-while (!done) {
-  const frame = cap.read();
-  const rgbFrame = fr.cvImageToImageRGB(new fr.CvImage(frame));
+(async () => {
+  while (!done) {
+    const frame = cap.read();
+    const rgbFrame = fr.cvImageToImageRGB(new fr.CvImage(frame));
 
-  // const faces = detector.locateFaces(rgbFrame);
-  // const faceRects = faces.map((face) => face.rect);
-  // const faceChips = detector.getFacesFromLocations(rgbFrame, faceRects);
-  const faceChips = detector.detectFaces(rgbFrame);
+    const faceChips = detector.detectFaces(rgbFrame);
 
-  for (let i = 0; i < faceChips.length; i++) {
-    const chip = faceChips[i];
-    //const rect = faceRects[i];
+    for (let i = 0; i < faceChips.length; i++) {
+      const chip = faceChips[i];
 
-    // const left = rect.left;
-    // const top = rect.top;
-    // const right = rect.right;
-    // const bottom = rect.bottom;
+      const predictions = recognizer.predict(chip);
+      const sortedPredictions = predictions.sort((p1, p2) => p1.distance - p2.distance);
 
-    //frame.drawRectangle(fr.toCvRect(rect), new cv.Vec3(0, 0, 255));
-    //frame.drawRectangle(new cv.Point2(left, bottom + 35), new cv.Point2(right, bottom), new cv.Vec3(0, 0, 255), cv.FILLED);
+      console.log(sortedPredictions[0].className);
+    }
 
-    const predictions = recognizer.predict(chip);
-    const sortedPredictions = predictions.sort((p1, p2) => p1.distance - p2.distance);
-
-    console.log(sortedPredictions[0].className);
-
-    //console.log("mikeLive = [" + recognizer.getFaceDescriptors(chip) + "];");
-
-    //frame.putText(sortedPredictions[0].className, new cv.Point2(left + 6, bottom + 31), cv.FONT_HERSHEY_DUPLEX, 1.0, new cv.Vec3(255, 255, 255), 1);
+    await new Promise((resolve) => {
+      setTimeout(resolve, 5);
+    })
   }
-
-  //cv.imshow('blah', frame);
-  const key = cv.waitKey(5);
-  done = key !== -1 && key !== 255;
-}
+})();

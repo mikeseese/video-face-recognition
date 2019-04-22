@@ -14,10 +14,14 @@
   "license": "MIT",
   "dependencies": {
     "@video-face-recognition/face-recognition": "^0.9.4-vfr.4",
+    "dotenv": "^7.0.0",
+    "fs-extra": "^7.0.1",
     "opencv4nodejs": "^4.14.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
+    "@types/dotenv": "^6.1.1",
+    "@types/fs-extra": "^5.0.5",
     "@types/mocha": "^5.2.5",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",

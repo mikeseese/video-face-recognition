@@ -1,0 +1,13 @@
+[Unit]
+Description=Video Face Recognition Gather Service
+
+[Service]
+Type=simple
+User=mil
+Group=mil
+WorkingDirectory=/home/mil/vfr/core
+EnvironmentFile=/home/mil/vfr/core/services/vfr-gather.conf
+ExecStart=/bin/bash yarn gather /home/mil/vfr/.data/training-images $NAME
+
+[Install]
+WantedBy=multi-user.target

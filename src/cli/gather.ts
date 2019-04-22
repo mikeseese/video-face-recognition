@@ -1,8 +1,11 @@
 
 import * as cv from "opencv4nodejs";
-import * as fs from "fs";
+import * as fse from "fs-extra";
 import * as path from "path";
 import * as fr from "@video-face-recognition/face-recognition";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 fr.withCv(cv);
 fr.winKillProcessOnExit();
@@ -13,17 +16,19 @@ if (process.argv.length - 2 !== expectedNumArgs) {
   throw new Error(`Received ${process.argv.length - 2} arguments, expected ${expectedNumArgs} (directory to save images, name of person)`);
 }
 
-if (!process.env.VFR_VIDEO_DEVICE_NUM) {
-  throw new Error("Environment variable VFR_VIDEO_DEVICE_NUM not set, used for cv.VideoCapture(VFR_VIDEO_DEVICE_NUM)");
+if (!process.env.VFR_VIDEO_DEVICE_NUM || !process.env.VFR_VIDEO_FPS) {
+  throw new Error(`Environment variables VFR_VIDEO_DEVICE_NUM or process.env.VFR_VIDEO_FPS ` +
+    `not set, used for cv.VideoCapture(VFR_VIDEO_DEVICE_NUM)") and cap.set(cv.CAP_PROP_FPS, process.env.VFR_VIDEO_FPS);`);
 }
 
 const cap = new cv.VideoCapture(parseInt(process.env.VFR_VIDEO_DEVICE_NUM));
+cap.set(cv.CAP_PROP_FPS, parseInt(process.env.VFR_VIDEO_FPS))
 
 const dataDir = process.argv[2];
 const name = process.argv[3];
 
 try {
-  fs.mkdirSync(path.join(dataDir, name));
+  fse.mkdirpSync(path.join(dataDir, name));
 }
 catch (e) {
   //
@@ -47,7 +52,7 @@ while (!done) {
     fr.saveImage(fileLocation, chip);
   }
 
-  cv.imshow('blah', frame);
+  cv.imshow("VFR - Press 'Q' to Stop", frame);
   const key = cv.waitKey(100);
   done = key !== -1 && key !== 255;
 }

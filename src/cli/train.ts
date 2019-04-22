@@ -9,9 +9,9 @@ fr.winKillProcessOnExit();
 const recognizer = fr.FaceRecognizer();
 const detector = fr.FaceDetector();
 
-const expectedNumArgs = 3;
-if (process.argv.length !== expectedNumArgs) {
-  throw new Error(`Received ${process.argv.length - 2} arguments, expected ${expectedNumArgs}`);
+const expectedNumArgs = 1;
+if (process.argv.length - 2 !== expectedNumArgs) {
+  throw new Error(`Received ${process.argv.length - 2} arguments, expected ${expectedNumArgs} (data folder with images)`);
 }
 
 const datasetLocation = path.resolve(process.argv[2]);
