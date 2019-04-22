@@ -7,7 +7,7 @@ User=mil
 Group=mil
 WorkingDirectory=/home/mil/vfr/core
 EnvironmentFile=/home/mil/vfr/core/services/vfr-gather.conf
-ExecStart=/bin/bash yarn gather /home/mil/vfr/.data/training-images $NAME
+ExecStart=/bin/bash source /home/mil/.bashrc && yarn gather /home/mil/vfr/.data/training-images $NAME
 
 [Install]
 WantedBy=multi-user.target
