@@ -1,5 +1,4 @@
 node_modules
 build
 yarn-error.log
-services/*.conf
 .env

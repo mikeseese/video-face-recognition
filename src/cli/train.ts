@@ -9,12 +9,13 @@ fr.winKillProcessOnExit();
 const recognizer = fr.FaceRecognizer();
 const detector = fr.FaceDetector();
 
-const expectedNumArgs = 1;
+const expectedNumArgs = 2;
 if (process.argv.length - 2 !== expectedNumArgs) {
-  throw new Error(`Received ${process.argv.length - 2} arguments, expected ${expectedNumArgs} (data folder with images)`);
+  throw new Error(`Received ${process.argv.length - 2} arguments, expected ${expectedNumArgs} (data folder with images, model.json location)`);
 }
 
 const datasetLocation = path.resolve(process.argv[2]);
+const modelLocation = path.resolve(process.argv[3]);
 
 const classNames = fs.readdirSync(datasetLocation).filter((f) => f !== "." && f !== "..");
 
@@ -42,6 +43,5 @@ for (let i = 0; i < classNames.length; i++) {
   recognizer.addFaces(faceChips, name);
 }
 
-console.log(recognizer.getDescriptorState());
 const modelState = recognizer.serialize();
-fs.writeFileSync(path.join(datasetLocation, "model.json"), JSON.stringify(modelState));
+fs.writeFileSync(modelLocation, JSON.stringify(modelState));
