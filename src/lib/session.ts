@@ -13,7 +13,17 @@ export default class Session {
     this.minFaceDetectionThreshold = minFaceDetectionThreshold;
   }
 
-  async getFaces(image: fr.ImageRGB): Promise<Faceprint[]> {
+  correlate(_rect: fr.Rect, _chip: fr.ImageRGB): Faceprint {
+    // simple no frame-to-frame correlation
+    return new Faceprint();
+  }
+
+  update(_faceprints: Faceprint[]) {
+    // simple no frame-to-frame correlation
+    return;
+  }
+
+  async addImage(image: fr.ImageRGB): Promise<Faceprint[]> {
     let result: Faceprint[] = [];
 
     const faces = this.detector.locateFaces(image);
@@ -24,9 +34,15 @@ export default class Session {
 
     for (let i = 0; i < faceChips.length; i++) {
       const chip = faceChips[i];
+      const rect = faceRects[i];
       const predictions = this.recognizer.predict(chip);
-      const sortedPredictions = predictions.sort((p1, p2) => p1.distance - p2.distance);
+
+      const fp = this.correlate(rect, chip);
+      fp.addPredictions(faceRects[i], chip, predictions);
+      result.push(fp);
     }
+
+    this.update(result);
 
     return result;
   }
