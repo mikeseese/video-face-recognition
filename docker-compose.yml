@@ -1,19 +1,6 @@
 version: '3.1'
 
 services:
-  core:
-    container_name: vfr-core
-    image: videofacerecognition/core
-    build: ../core
-    restart: always
-    networks:
-      - video-face-recognition
-    volumes:
-      - model-data:/app/models
-    devices:
-      - /dev/video0:/dev/video0
-    depends_on:
-      - persistence
 
   dashboard:
     container_name: vfr-dashboard
