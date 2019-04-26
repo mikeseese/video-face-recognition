@@ -1,0 +1,25 @@
+{
+  "name": "@video-face-recognition/persistence",
+  "version": "1.0.0-alpha.0",
+  "description": "Persistence for VFR",
+  "main": "lib/index.js",
+  "repository": "git@github.com:trufflesuite/tft.git",
+  "author": "Truffle Blockchain Group",
+  "license": "NONE",
+  "private": true,
+  "devDependencies": {
+    "@types/node": "^11.9.6"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "comments": [],
+  "dependencies": {
+    "express-session": "^1.16.1",
+    "pg": "^7.9.0",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.16",
+    "typeorm-store": "^1.2.0",
+    "typescript": "^3.4.0"
+  }
+}
