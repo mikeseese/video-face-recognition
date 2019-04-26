@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": [ "dom", "es2015" ],
+    "lib": [ "dom", "es2017" ],
     "outDir": "./build",
     "rootDir": "./src",
     "sourceMap": true

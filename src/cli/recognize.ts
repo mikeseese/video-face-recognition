@@ -2,7 +2,11 @@ import * as path from "path";
 import * as cv from "opencv4nodejs";
 import * as fr from "@video-face-recognition/face-recognition";
 import * as dotenv from "dotenv";
-import Session from "../lib/session"
+import Session from "../lib/session";
+import { AccessLog, Identity } from "@video-face-recognition/persistence";
+import {
+  LessThan
+} from "typeorm";
 
 dotenv.config();
 
@@ -30,9 +34,38 @@ let done = false;
 (async () => {
   while (!done) {
     const frame = cap.read();
+    const frameTime = new Date();
     const rgbFrame = fr.cvImageToImageRGB(new fr.CvImage(frame));
 
-    const faceprints = session.addImage(rgbFrame);
+    const faceprints = await session.addImage(rgbFrame);
+
+    for (const faceprint of faceprints) {
+      const identity = faceprint.identity();
+
+      const log = await AccessLog.findOne({
+        where: [{
+          identity: {
+            name: identity.name
+          }
+        }, {
+          timestamp: LessThan(new Date(frameTime.getTime() - 60 * 1000))
+        }]
+      });
+
+      if (typeof log === "undefined") {
+        const id = await Identity.findOne({
+          where: {
+            name: identity.name
+          }
+        });
+
+        await AccessLog.create({
+          timestamp: frameTime,
+          authorized: id ? id.authorized : false,
+          identity: id || null
+        });
+      }
+    }
 
     await new Promise((resolve) => {
       setTimeout(resolve, 5);

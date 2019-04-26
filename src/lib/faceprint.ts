@@ -9,9 +9,11 @@ export default class Faceprint {
   public rect: fr.Rect;
   public chip: fr.ImageRGB;
   private predictionDistributions: { [name: string]: number[] };
+  public numPredictions: number;
 
   constructor() {
     this.predictionDistributions = {};
+    this.numPredictions = 0;
   }
 
   identity(): FaceIdentity {
@@ -31,6 +33,7 @@ export default class Faceprint {
   }
 
   addPredictions(rect: fr.Rect, chip: fr.ImageRGB, predictions: fr.FacePrediction[]) {
+    this.numPredictions++;
     this.rect = rect;
     this.chip = chip;
     for (const prediction of predictions) {

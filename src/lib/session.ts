@@ -13,17 +13,17 @@ export default class Session {
     this.minFaceDetectionThreshold = minFaceDetectionThreshold;
   }
 
-  correlate(_rect: fr.Rect, _chip: fr.ImageRGB): Faceprint {
+  private correlate(_rect: fr.Rect, _chip: fr.ImageRGB): Faceprint {
     // simple no frame-to-frame correlation
     return new Faceprint();
   }
 
-  update(_faceprints: Faceprint[]) {
+  private update(_faceprints: Faceprint[]) {
     // simple no frame-to-frame correlation
     return;
   }
 
-  async addImage(image: fr.ImageRGB): Promise<Faceprint[]> {
+  public async addImage(image: fr.ImageRGB): Promise<Faceprint[]> {
     let result: Faceprint[] = [];
 
     const faces = this.detector.locateFaces(image);
