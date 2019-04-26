@@ -39,7 +39,7 @@ let done = false;
 
     const faceprints = await session.addImage(rgbFrame);
 
-    for (const faceprint of faceprints) {
+    const promises = faceprints.map(async (faceprint) => {
       const identity = faceprint.identity();
 
       const log = await AccessLog.findOne({
@@ -65,7 +65,9 @@ let done = false;
           identity: id || null
         });
       }
-    }
+    });
+
+    await Promise.all(promises);
 
     await new Promise((resolve) => {
       setTimeout(resolve, 5);
