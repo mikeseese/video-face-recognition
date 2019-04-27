@@ -31,5 +31,5 @@ networks:
   video-face-recognition:
 
 volumes:
-  db-data: .data/persistence
-  model-data: .data/models
+  db-data: ./../.data/persistence
+  model-data: ./../.data/models
