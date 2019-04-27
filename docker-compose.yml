@@ -1,0 +1,35 @@
+version: '3.1'
+
+services:
+
+  dashboard:
+    container_name: vfr-dashboard
+    image: videofacerecognition/dashboard
+    build: ../dashboard
+    restart: always
+    networks:
+      - video-face-recognition
+    ports:
+      - 9000:8080
+    depends_on:
+      - persistence
+      - core
+
+  persistence:
+    container_name: vfr-persistence
+    image: videofacerecognition/persistence
+    build: ../persistence
+    restart: always
+    networks:
+      - video-face-recognition
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 9001:5432
+
+networks:
+  video-face-recognition:
+
+volumes:
+  db-data: ./../.data/persistence
+  model-data: ./../.data/models
