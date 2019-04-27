@@ -22,4 +22,7 @@ export class AccessLog extends BaseEntity {
   @ManyToOne(_type => Identity, { nullable: true })
   @JoinColumn()
   public identity?: Identity;
+
+  @Column({ nullable: true })
+  public confidence?: number;
 }
