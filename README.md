@@ -1,4 +1,4 @@
-# Video Face Recognition (VFR) - Setup
+# Video Face Recognition (VFR)
 
 This repository contains the setup and admin scripts for managing the Video Face Recognition (VFR) system. The VFR system was created as an independent study for my Master of Science program at the University of Florida. The target is a NVIDIA Jetson TX2 running Ubuntu 16.04.
 
@@ -9,10 +9,9 @@ Contributors are definitely welcome! I'm active on GitHub and will review PRs in
 
 ## VFR Components
 
-- [Core](https://github.com/SeesePlusPlus/vfr-core) - The daemon that runs the facial recognition and training
-- [Dashboard](https://github.com/SeesePlusPlus/vfr-dashboard) - The web interface which users can check status and manage the VFR system
-- [Persistence](https://github.com/SeesePlusPlus/vfr-persistence) - A simple repository containing the database schema and initialization scripts
-- [Setup](https://github.com/SeesePlusPlus/vfr-setup) - This repository. Contains the `docker-compose.yml` file and helper scripts that bring the other components/services together.
+- [Core](packages/core) - The daemon that runs the facial recognition and training
+- [Dashboard](packages/dashboard) - The web interface which users can check status and manage the VFR system
+- [Persistence](packages/persistence) - A simple repository containing the database schema and initialization scripts
 
 ## Initial Setup
 1. `./install-arm64-deps.sh` (don't use `sudo` as it installs stuff in the user folder, it will prompt for a `sudo` password)
@@ -64,13 +63,10 @@ You can clean the persistent data by running `sudo rm -r .data` from this direct
 ## Development
 To develop on the VFR system, I suggest the following steps:
 
-1. `mkdir vfr && cd vfr`
-1. `git clone https://github.com/SeesePlusPlus/vfr-setup.git setup`
-1. `git clone https://github.com/SeesePlusPlus/vfr-core.git core`
-1. `git clone https://github.com/SeesePlusPlus/vfr-dashboard.git dashboard`
-1. `git clone https://github.com/SeesePlusPlus/vfr-persistence.git persistence`
-1. `cd persistence`
-1. `./build.sh` or `docker-compose build`
+1. `git clone https://github.com/SeesePlusPlus/video-face-recognition.git vfr`
+1. `cd vfr`
+1. `yarn`
+1. `yarn bootstrap`
 
 Of course, change the Git urls appropriately if you have forked the repositories, though keep the folder structure as the `docker-compose.yml` is expecting it for the build steps.
 
