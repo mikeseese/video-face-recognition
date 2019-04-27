@@ -39,21 +39,18 @@ The `initialize-and-start.sh` and `destroy.sh` scripts will run `docker-compose 
 ### Start/Stop/Restart
 The `start.sh`, `stop.sh`, and `restart.sh` scripts in this directory are just wrappers around `docker-compose start|stop|restart`.
 
-### Maintenance Mode
-A helper `maintenance.sh` script is also available. `sudo ./maintenance.sh start` will run `sudo ./stop.sh` and start a lightweight webserver to display a maintenance page. `sudo ./maintenance.sh stop` will stop the maintenace page webserver and run `sudo ./start.sh`. You may style the maintenance page at [maintenance/index.html](maintenance/index.html).
-
 ### Export/Import Persistent Data
 If you need to export/import persistent data for any reason (regular backups, hardware issues/upgrades, etc.), there are two helper scripts for that as well.
 
-**In both cases, you should [stop the VFR system](#startstoprestart) or put it in [maintenance mode](#maintenance-mode).**
+**In both cases, you should [stop the VFR system](#startstoprestart).**
 
 #### Export
-Before exporting **you should [stop the VFR system](#startstoprestart) or put it in [maintenance mode](#maintenance-mode).**
+Before exporting **you should [stop the VFR system](#startstoprestart).**
 
 Running `./export.sh` will create a compressed tarball of the `.data` directory with the `vfr-export-YYYYmmdd-HHMMss.tar.gz` pattern. You can then transfer this file wherever you'd like to store it.
 
 #### Import
-Before importing **you should [stop the VFR system](#startstoprestart) or put it in [maintenance mode](#maintenance-mode).**
+Before importing **you should [stop the VFR system](#startstoprestart).**
 
 Copy the tarball that you had previously [exported](#export) to this directory. Run `sudo ./import.sh <vfr-export-YYYYmmdd-HHMMss.tar.gz>`.
 
