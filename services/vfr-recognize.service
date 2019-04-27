@@ -1,0 +1,14 @@
+[Unit]
+Description=Video Face Recognition Recognize Service
+
+[Service]
+Type=simple
+User=mil
+Group=mil
+WorkingDirectory=/home/mil/vfr/core
+EnvironmentFile=/home/mil/vfr/core/services/vfr.conf
+ExecStart=/bin/bash -c "yarn recognize /home/mil/vfr/.data/model.json"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
