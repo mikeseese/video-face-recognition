@@ -28,6 +28,9 @@ if (!process.env.VFR_VIDEO_DEVICE_NUM || !process.env.VFR_VIDEO_FPS) {
 const cap = new cv.VideoCapture(parseInt(process.env.VFR_VIDEO_DEVICE_NUM));
 cap.set(cv.CAP_PROP_FPS, parseInt(process.env.VFR_VIDEO_FPS));
 
+const reportingIntervalSeconds = process.env.VFR_REPORTING_INTERVAL_SEC ? parseInt(process.env.VFR_REPORTING_INTERVAL_SEC) : 60;
+const minConfidenceThreshold = (1 / 100) * (process.env.VFR_CONFIDENCE_THRESHOLD_PERCENT ? parseInt(process.env.VFR_CONFIDENCE_THRESHOLD_PERCENT) : 60);
+
 const session = new Session(model);
 
 let done = false;
@@ -42,27 +45,38 @@ let done = false;
     const promises = faceprints.map(async (faceprint) => {
       const identity = faceprint.identity();
 
-      const log = await AccessLog.findOne({
-        where: [{
-          identity: {
-            name: identity.name
-          }
-        }, {
-          timestamp: LessThan(new Date(frameTime.getTime() - 60 * 1000))
-        }]
-      });
-
-      if (typeof log === "undefined") {
-        const id = await Identity.findOne({
-          where: {
-            name: identity.name
-          }
+      if (identity.confidence >= minConfidenceThreshold) {
+        const log = await AccessLog.findOne({
+          where: [{
+            identity: {
+              name: identity.name
+            }
+          }, {
+            timestamp: LessThan(new Date(frameTime.getTime() - reportingIntervalSeconds * 1000))
+          }]
         });
 
+        if (typeof log === "undefined") {
+          const id = await Identity.findOne({
+            where: {
+              name: identity.name
+            }
+          });
+
+          await AccessLog.create({
+            timestamp: frameTime,
+            authorized: id ? id.authorized : false,
+            identity: id || null,
+            confidence: identity.confidence
+          });
+        }
+      }
+      else {
         await AccessLog.create({
           timestamp: frameTime,
-          authorized: id ? id.authorized : false,
-          identity: id || null
+          authorized: false,
+          identity: null,
+          confidence: null
         });
       }
     });
