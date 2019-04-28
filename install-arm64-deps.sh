@@ -68,6 +68,4 @@ cmake .. -DDLIB_USE_CUDA=1 -DUSE_AVX_INSTRUCTIONS=1
 make -j4
 sudo make install
 
-## VFR development
-cd ~
-git clone https://github.com/SeesePlusPlus/video-face-recognition.git vfr
+cd ~/vfr
