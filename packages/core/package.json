@@ -6,10 +6,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --baseUrl .",
     "prepare": "npm run build",
-    "gather": "node build/cli/gather.js",
-    "train": "node build/cli/train.js",
-    "recognize": "node build/cli/recognize.js",
-    "plot": "node build/cli/plot.js"
+    "gather": "node dist/cli/gather.js",
+    "train": "node dist/cli/train.js",
+    "recognize": "node dist/cli/recognize.js",
+    "plot": "node dist/cli/plot.js"
   },
   "license": "MIT",
   "dependencies": {

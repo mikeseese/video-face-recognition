@@ -2,11 +2,11 @@
   "name": "@video-face-recognition/persistence",
   "version": "1.0.0-alpha.0",
   "description": "Persistence for VFR",
-  "main": "build/index.js",
-  "repository": "git@github.com:trufflesuite/tft.git",
-  "author": "Truffle Blockchain Group",
-  "license": "NONE",
-  "private": true,
+  "main": "dist/index.js",
+  "repository": "git@github.com:seeseplusplus/video-face-recognition.git",
+  "author": "Mike Seese",
+  "license": "MIT",
+  "private": false,
   "devDependencies": {
     "@types/node": "^11.9.6"
   },

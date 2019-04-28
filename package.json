@@ -1,0 +1,29 @@
+{
+  "name": "video-face-recognition",
+  "version": "1.0.0-alpha.0",
+  "description": "Monorepo for the Video Face Recognition (VFR) system",
+  "repository": "git@github.com:seeseplusplus/video-face-recognition.git",
+  "author": "Mike Seese",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "lerna": "^3.13.4"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "prepare": "lerna bootstrap",
+    "build": "scripts/build.sh",
+    "build:core": "cd packages/core && yarn build",
+    "build:dashborad": "cd packages/dashboard && yarn build",
+    "build:persistence": "cd packages/persistence && yarn build",
+    "preinstall": "node scripts/check-yarn.js",
+    "clean:build": "./scripts/clean-build.sh",
+    "clean:all": "./scripts/clean-all.sh",
+    "clean:build:core": "cd packages/core && rm -rf dist",
+    "clean:build:persistence": "cd packages/persistence && rm -rf dist"
+  }
+}

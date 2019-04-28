@@ -5,7 +5,7 @@ services:
   dashboard:
     container_name: vfr-dashboard
     image: videofacerecognition/dashboard
-    build: ../dashboard
+    build: packages/dashboard
     restart: always
     networks:
       - video-face-recognition
@@ -18,7 +18,7 @@ services:
   persistence:
     container_name: vfr-persistence
     image: videofacerecognition/persistence
-    build: ../persistence
+    build: packages/persistence
     restart: always
     networks:
       - video-face-recognition

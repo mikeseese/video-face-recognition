@@ -22,7 +22,7 @@ const tests = (model: fr.FaceDescriptor[], baseDirectory: string) => {
         const rgbImage = fr.loadImage(path.join(testDirectory, files[i]));
 
         // detect and identify faces
-        const faces = await session.getFaces(rgbImage);
+        const faces = await session.addImage(rgbImage);
 
         // compare to truth
       }
