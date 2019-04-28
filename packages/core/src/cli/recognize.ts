@@ -6,7 +6,7 @@ import Session from "../lib/session";
 import "reflect-metadata";
 import { AccessLog, Identity, ConnectPersistence } from "@video-face-recognition/persistence";
 import {
-  LessThan
+  MoreThanOrEqual
 } from "typeorm";
 
 dotenv.config();
@@ -52,7 +52,14 @@ let done = false;
     const promises = faceprints.map(async (faceprint) => {
       const identity = faceprint.identity();
 
-      if (identity.confidence >= minConfidenceThreshold) {
+      const id = await Identity.findOne({
+        where: {
+          name: identity.name
+        }
+      });
+
+      if (identity.confidence >= minConfidenceThreshold && id) {
+        // database has this identity, see when the last time it was reported
         const log = await AccessLog.createQueryBuilder("log")
           .leftJoinAndSelect("log.identity", "identity")
           .where("identity.name = :name", { name: identity.name })
@@ -62,27 +69,35 @@ let done = false;
           .getOne();
 
         if (typeof log === "undefined") {
-          const id = await Identity.findOne({
-            where: {
-              name: identity.name
-            }
-          });
-
+          // we havent reported this identity in awhile, report again
           await AccessLog.create({
             timestamp: frameTime,
-            authorized: id ? id.authorized : false,
-            identity: id || null,
+            authorized: id.authorized,
+            identity: id,
             confidence: Math.floor(identity.confidence * 100)
           }).save();
         }
       }
       else {
-        await AccessLog.create({
-          timestamp: frameTime,
-          authorized: false,
-          identity: null,
-          confidence: null
-        }).save();
+        const lastUnknown = await AccessLog.findOne({
+          where: [{
+            timestamp: MoreThanOrEqual(new Date(frameTime.getTime() - reportingIntervalSeconds * 1000))
+          }, {
+            identity: null
+          }]
+        });
+
+        if (typeof lastUnknown === "undefined") {
+          // we're either not sure about who this is or
+          // the id is not in the database. it's been awhile
+          // since we reported an unknown, lets report again
+          await AccessLog.create({
+            timestamp: frameTime,
+            authorized: false,
+            identity: null,
+            confidence: null
+          }).save();
+        }
       }
     });
 
