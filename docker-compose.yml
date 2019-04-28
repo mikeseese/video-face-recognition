@@ -13,7 +13,6 @@ services:
       - 9000:8080
     depends_on:
       - persistence
-      - core
 
   persistence:
     container_name: vfr-persistence
