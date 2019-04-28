@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as cv from "opencv4nodejs";
 import * as fr from "@video-face-recognition/face-recognition";
+import "reflect-metadata";
 import { ConnectPersistence, Identity } from "@video-face-recognition/persistence";
 
 fr.withCv(cv);
@@ -56,6 +57,7 @@ if (fs.existsSync(datasetLocation)) {
 // load the identities (just names really) into the database
 // if they're not there already
 (async () => {
+  console.log(`Adding identities to the db`);
   if (fs.existsSync(modelLocation)) {
     await ConnectPersistence(dbConnectionString);
 
@@ -69,9 +71,13 @@ if (fs.existsSync(datasetLocation)) {
       });
 
       if (!id) {
+        console.log(`Adding ${descriptor.className} identity`);
         await Identity.create({
           name: descriptor.className
-        });
+        }).save();
+      }
+      else {
+        console.log(`Identity ${descriptor.className} already added to DB`);
       }
     }
   }
