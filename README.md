@@ -16,6 +16,20 @@ Contributors are definitely welcome! I'm active on GitHub and will review PRs in
 ## Initial Setup
 1. `./install-arm64-deps.sh` (don't use `sudo` as it installs stuff in the user folder, it will prompt for a `sudo` password)
     - This script installs Docker CE and Docker Compose dependencies necessary for running the VFR system. Since it targets the TX2 board, it installs Docker CE for the `arm64` architecture.
+1. Add the following lines to your `~/.bashrc` files. Change as you see fit:
+    ```bash
+    export DLIB_INCLUDE_DIR=/usr/local/include
+    export DLIB_LIB_DIR=/usr/local/lib
+
+    export CUDA_LIB_DIR=/usr/local/cuda/lib64
+    export CUDNN_LIB_DIR=/usr/lib/aarch64-linux-gnu
+
+    export OPENBLAS_LIB_DIR=/usr/local/lib
+
+    export OPENCV4NODEJS_DISABLE_AUTOBUILD=1
+    export OPENCV_LIB_DIR=/usr/lib
+    export OPENCV_INCLUDE_DIR=/usr/include
+    ```
 1. `sudo ./initialize-and-start.sh`
     - This script runs `docker-compose up -d` which will create the containers
 

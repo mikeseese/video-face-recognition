@@ -70,8 +70,4 @@ sudo make install
 
 ## VFR development
 cd ~
-mkdir vfr && cd vfr
-git clone https://github.com/seeseplusplus/vfr-core
-git clone https://github.com/seeseplusplus/vfr-dashboard
-git clone https://github.com/seeseplusplus/vfr-setup
-git clone https://github.com/SeesePlusPlus/vfr-persistence
+git clone https://github.com/SeesePlusPlus/video-face-recognition.git vfr
