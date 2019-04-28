@@ -23,8 +23,18 @@ services:
       - video-face-recognition
     volumes:
       - ./../.data/persistence:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: vfr
     ports:
       - 9001:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    networks:
+      - video-face-recognition
+    ports:
+      - 9002:8080
 
 networks:
   video-face-recognition:

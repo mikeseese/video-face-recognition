@@ -3,7 +3,8 @@ import * as cv from "opencv4nodejs";
 import * as fr from "@video-face-recognition/face-recognition";
 import * as dotenv from "dotenv";
 import Session from "../lib/session";
-import { AccessLog, Identity } from "@video-face-recognition/persistence";
+import "reflect-metadata";
+import { AccessLog, Identity, ConnectPersistence } from "@video-face-recognition/persistence";
 import {
   LessThan
 } from "typeorm";
@@ -31,10 +32,16 @@ cap.set(cv.CAP_PROP_FPS, parseInt(process.env.VFR_VIDEO_FPS));
 const reportingIntervalSeconds = process.env.VFR_REPORTING_INTERVAL_SEC ? parseInt(process.env.VFR_REPORTING_INTERVAL_SEC) : 60;
 const minConfidenceThreshold = (1 / 100) * (process.env.VFR_CONFIDENCE_THRESHOLD_PERCENT ? parseInt(process.env.VFR_CONFIDENCE_THRESHOLD_PERCENT) : 60);
 
+const dbConnectionString =
+  process.env.VFR_POSTGRESDB_CONNECTION_STRING ||
+  `postgresql://postgres:postgres@localhost:9001/vfr`;
+
 const session = new Session(model);
 
 let done = false;
 (async () => {
+  await ConnectPersistence(dbConnectionString);
+
   while (!done) {
     const frame = cap.read();
     const frameTime = new Date();
