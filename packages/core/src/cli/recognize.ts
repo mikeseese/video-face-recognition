@@ -79,13 +79,12 @@ let done = false;
         }
       }
       else {
-        const lastUnknown = await AccessLog.findOne({
-          where: [{
-            timestamp: MoreThanOrEqual(new Date(frameTime.getTime() - reportingIntervalSeconds * 1000))
-          }, {
-            identity: null
-          }]
-        });
+        const lastUnknown = await AccessLog.createQueryBuilder("log")
+          .where("log.identity IS NULL")
+          .andWhere("log.timestamp >= :timestamp", {
+            timestamp: new Date(frameTime.getTime() - reportingIntervalSeconds * 1000)
+          })
+          .getOne();
 
         if (typeof lastUnknown === "undefined") {
           // we're either not sure about who this is or
