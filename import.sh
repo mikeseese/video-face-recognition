@@ -12,7 +12,7 @@ read -p "Are you sure you want to overwrite VFR data with contents of ${name} [y
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   echo "Importing ${name}"
-  tar xpvf ${name} -C ..
+  tar xpvf ${name}
 else
   echo "Skipping import"
 fi
