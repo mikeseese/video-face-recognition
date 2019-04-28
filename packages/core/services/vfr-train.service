@@ -8,7 +8,6 @@ Group=mil
 WorkingDirectory=/home/mil/vfr/packages/core
 EnvironmentFile=/home/mil/vfr/packages/core/services/vfr.conf
 ExecStart=/bin/bash -c "yarn train /home/mil/vfr/.data/training-images /home/mil/vfr/.data/model.json"
-Restart=always
 
 [Install]
 WantedBy=multi-user.target
