@@ -24,7 +24,7 @@ export default class Faceprint {
     const totalDistance = accumulatedDistributaions.reduce((sum: number, val: number) => val + (sum || 0));
 
     const minDistance = Math.min(...accumulatedDistributaions);
-    const name = Object.keys(accumulatedDistributaions)[accumulatedDistributaions.indexOf(minDistance)];
+    const name = Object.keys(this.predictionDistributions)[accumulatedDistributaions.indexOf(minDistance)];
 
     return {
       name,
