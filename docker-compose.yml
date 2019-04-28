@@ -23,13 +23,9 @@ services:
     networks:
       - video-face-recognition
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - ./../.data/persistence:/var/lib/postgresql/data
     ports:
       - 9001:5432
 
 networks:
   video-face-recognition:
-
-volumes:
-  db-data: ./../.data/persistence
-  model-data: ./../.data/models
