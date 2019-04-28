@@ -5,8 +5,8 @@ Description=Video Face Recognition Gather Service
 Type=simple
 User=mil
 Group=mil
-WorkingDirectory=/home/mil/vfr/core
-EnvironmentFile=/home/mil/vfr/core/services/vfr-gather.conf
+WorkingDirectory=/home/mil/vfr/packages/core
+EnvironmentFile=/home/mil/vfr/packages/core/services/vfr-gather.conf
 ExecStart=/usr/bin/xinit -e /bin/bash -c "yarn gather /home/mil/vfr/.data/training-images $NAME" $* -- :2
 
 [Install]
