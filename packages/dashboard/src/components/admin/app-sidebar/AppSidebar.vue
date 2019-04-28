@@ -212,28 +212,6 @@
       <sidebar-link-group>
         <span slot="title">
           <span
-            class="sidebar-menu-item-icon vuestic-icon vuestic-icon-auth"></span>
-          <span>{{ $t('menu.auth') }}</span>
-        </span>
-        <sidebar-link
-          :to="{ name: 'login' }"
-          target="_blank"
-          :isChildLink="true">
-          <span slot="title">
-            <span>{{ $t('menu.login') }}</span>
-          </span>
-        </sidebar-link>
-        <sidebar-link
-          :to="{ name: 'signup' }"
-          target="_blank">
-          <span slot="title">
-            <span>{{ $t('menu.signUp') }}</span>
-          </span>
-        </sidebar-link>
-      </sidebar-link-group>
-      <sidebar-link-group>
-        <span slot="title">
-          <span
             class="sidebar-menu-item-icon vuestic-icon vuestic-icon-files"></span>
           <span>{{ $t('menu.pages') }}</span>
         </span>

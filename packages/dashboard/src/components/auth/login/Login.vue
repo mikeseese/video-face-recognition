@@ -24,9 +24,6 @@
         <button class="btn btn-primary" type="submit">
           {{ $t('auth.login') }}
         </button>
-        <router-link class='link flex-center pl-2 text-center' :to="{name: 'signup'}">
-          {{ $t('auth.createAccount') }}
-        </router-link>
       </div>
     </form>
   </div>
