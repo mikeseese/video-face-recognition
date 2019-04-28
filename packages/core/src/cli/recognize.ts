@@ -49,11 +49,8 @@ let done = false;
 
     const faceprints = await session.addImage(rgbFrame);
 
-    console.log(faceprints[0]);
-
     const promises = faceprints.map(async (faceprint) => {
       const identity = faceprint.identity();
-      console.log(identity);
 
       if (identity.confidence >= minConfidenceThreshold) {
         const log = await AccessLog.createQueryBuilder("log")
