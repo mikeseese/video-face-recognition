@@ -49,19 +49,20 @@ let done = false;
 
     const faceprints = await session.addImage(rgbFrame);
 
+    console.log(faceprints[0]);
+
     const promises = faceprints.map(async (faceprint) => {
       const identity = faceprint.identity();
+      console.log(identity);
 
       if (identity.confidence >= minConfidenceThreshold) {
-        const log = await AccessLog.findOne({
-          where: [{
-            identity: {
-              name: identity.name
-            }
-          }, {
-            timestamp: LessThan(new Date(frameTime.getTime() - reportingIntervalSeconds * 1000))
-          }]
-        });
+        const log = await AccessLog.createQueryBuilder("log")
+          .leftJoinAndSelect("log.identity", "identity")
+          .where("identity.name = :name", { name: identity.name })
+          .andWhere("log.timestamp >= :timestamp", {
+            timestamp: new Date(frameTime.getTime() - reportingIntervalSeconds * 1000)
+          })
+          .getOne();
 
         if (typeof log === "undefined") {
           const id = await Identity.findOne({
@@ -74,8 +75,8 @@ let done = false;
             timestamp: frameTime,
             authorized: id ? id.authorized : false,
             identity: id || null,
-            confidence: identity.confidence
-          });
+            confidence: Math.floor(identity.confidence * 100)
+          }).save();
         }
       }
       else {
@@ -84,7 +85,7 @@ let done = false;
           authorized: false,
           identity: null,
           confidence: null
-        });
+        }).save();
       }
     });
 
