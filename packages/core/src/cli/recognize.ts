@@ -95,7 +95,7 @@ let done = false;
             timestamp: frameTime,
             authorized: false,
             identity: null,
-            confidence: null
+            confidence: Math.floor(identity.confidence * 100)
           }).save();
         }
       }
