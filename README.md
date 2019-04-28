@@ -54,6 +54,17 @@ The `initialize-and-start.sh` and `destroy.sh` scripts will run `docker-compose 
 ### Start/Stop/Restart
 The `start.sh`, `stop.sh`, and `restart.sh` scripts in this directory are just wrappers around `docker-compose start|stop|restart`.
 
+### Database Navigation
+Adminer, a SQL admin webapp, is available by navigating to `http://localhost:9002`. The default credentials are as follows:
+- **System:** `PostgreSQL`
+- **Server:** `vfr-persistence:5432`
+- **Username:** `postgres`
+- **Password:** `postgres`
+- **Database:** `vfr`
+
+#### Docker Volume
+There is also a docker volume for the database contents which **will survive a `./destroy.sh`**. You can see where the volume is located using `docker inspect pg_data`.
+
 ### Export/Import Persistent Data
 If you need to export/import persistent data for any reason (regular backups, hardware issues/upgrades, etc.), there are two helper scripts for that as well.
 
@@ -64,12 +75,18 @@ Before exporting **you should [stop the VFR system](#startstoprestart).**
 
 Running `./export.sh` will create a compressed tarball of the `.data` directory with the `vfr-export-YYYYmmdd-HHMMss.tar.gz` pattern. You can then transfer this file wherever you'd like to store it.
 
+##### Exporting the Database
+Unfortunately I wasn't able to get the database files to be easily exported. The `export.sh` script will only export the training images and facial recognition model. To export the database, you can [access Adminer](#database-navigation) and clicking the `Export` link on the left sidebar.
+
 #### Import
 Before importing **you should [stop the VFR system](#startstoprestart).**
 
 Copy the tarball that you had previously [exported](#export) to this directory. Run `sudo ./import.sh <vfr-export-YYYYmmdd-HHMMss.tar.gz>`.
 
 For safe keeping, `import.sh` will conduct an `export` before importing to prevent data loss since importing will overwrite the `.data` directly completely. You can disable the preliminary export (**though this will delete your `.data` directory upon import!**) by adding the `--no-backup` argument: `sudo ./import.sh --no-backup <vfr-export-YYYYmmdd-HHMMss.tar.gz>`
+
+##### Importing the Database
+Unfortunately I wasn't able to get the database files to be easily imported. The `import.sh` script will only import the training images and facial recognition model. To import the database, you can [access Adminer](#database-navigation) and clicking the `Import` link on the left sidebar.
 
 ### Clean Persistent Data
 :warning: **YOU WILL LOSE ALL OF YOUR TRAINED FACIAL MODELS, DASHBOARD USER INFORMATION, LOGS, ETC**

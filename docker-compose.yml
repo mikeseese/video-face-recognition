@@ -22,7 +22,7 @@ services:
     networks:
       - video-face-recognition
     volumes:
-      - ./../.data/persistence:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: vfr
     ports:
@@ -38,3 +38,5 @@ services:
 
 networks:
   video-face-recognition:
+volumes:
+  pg_data:
