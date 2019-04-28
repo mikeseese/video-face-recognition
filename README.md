@@ -30,6 +30,8 @@ Contributors are definitely welcome! I'm active on GitHub and will review PRs in
     export OPENCV_LIB_DIR=/usr/lib
     export OPENCV_INCLUDE_DIR=/usr/include
     ```
+1. `exec bash` to make sure you load the environment variables we added in the prior step
+1. `./update.sh` will then `git pull`, `yarn`, and `yarn build`
 1. `sudo ./initialize-and-start.sh`
     - This script runs `docker-compose up -d` which will create the containers
 
@@ -79,10 +81,18 @@ To develop on the VFR system, I suggest the following steps:
 
 1. `git clone https://github.com/SeesePlusPlus/video-face-recognition.git vfr`
 1. `cd vfr`
-1. `yarn`
-1. `yarn bootstrap`
+1. `yarn` - This downloads any missing dependencies
+1. `yarn build` - This builds the Typescript sources of VFR
 
 Of course, change the Git urls appropriately if you have forked the repositories, though keep the folder structure as the `docker-compose.yml` is expecting it for the build steps.
+
+### Updating the sources
+If the repo was updated externally (i.e. not on your target device), `./update.sh` will run `git pull`, `yarn clean:build`, `yarn`, and `yarn build` for you.
+
+### Cleaning your development environment
+There are two commands in the base of the monorepo for cleaning your development environment:
+- `yarn clean:build` only cleans the build artifacts (i.e. `packages/*/dist/*.js`); it will not clean your dependencies since installing those can take awhile on the target hardware
+- `yarn clean:all` (:warning: **this will not prompt you if you'd like to clean stuff**) will clean all your dependencies and build artifacts, you will need to run `yarn` before running `yarn build` to download/build the NodeJS dependencies
 
 ## Troubleshooting
 

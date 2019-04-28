@@ -4,4 +4,5 @@
 set -ex
 
 lerna clean -y
-rm -rf node_modulesm
+rm -rf node_modules
+yarn clean:build
