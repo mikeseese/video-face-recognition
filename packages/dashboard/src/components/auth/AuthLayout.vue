@@ -14,9 +14,6 @@
       <div class="auth-layout__auth-wallpaper flex md6">
         <div class="flex-center">
           <div class="auth-layout__auth-wallpaper__cross-line"/>
-          <router-link class="auth-layout__auth-wallpaper__logo" :to="{path: '/'}">
-            <vuestic-icon-vuestic/>
-          </router-link>
         </div>
       </div>
     </div>
@@ -25,12 +22,10 @@
 
 <script>
 // d-none and d-lg-flex were deleted, bug will be fixed in the nearest update
-import VuesticIconVuestic
-  from '../../vuestic-theme/vuestic-components/vuestic-icon/VuesticIconVuestic'
 
 export default {
   name: 'AuthLayout',
-  components: { VuesticIconVuestic },
+  components: { },
 }
 </script>
 
