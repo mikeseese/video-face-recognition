@@ -2,6 +2,20 @@ version: '3.1'
 
 services:
 
+  nginx:
+    container_name: vfr-nginx
+    depends_on:
+      - api
+      - dashboard
+    image: nginx
+    volumes:
+      - ./.data/nginx/logs:/var/log/nginx
+      - ./conf/nginx:/etc/nginx
+    networks:
+      - video-face-recognition
+    ports:
+      - 10000:80
+
   dashboard:
     container_name: vfr-dashboard
     image: videofacerecognition/dashboard
