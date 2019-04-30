@@ -20,3 +20,5 @@ inspect.js
 *.njsproj
 *.sln
 *.sw*
+
+package-lock.json
