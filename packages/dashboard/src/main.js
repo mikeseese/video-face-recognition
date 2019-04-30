@@ -12,7 +12,9 @@ import router from './router'
 import VuesticPlugin from '@/vuestic-theme/vuestic-plugin'
 import './i18n'
 import YmapPlugin from 'vue-yandex-maps'
+import axios from "axios"
 
+Vue.prototype.$http = axios;
 Vue.use(VuesticPlugin)
 Vue.use(YmapPlugin)
 

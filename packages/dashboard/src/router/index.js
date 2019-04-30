@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import AppLayout from '../components/admin/AppLayout'
 import AuthLayout from '../components/auth/AuthLayout'
 import lazyLoading from './lazyLoading'
+import store from "../store"
 
 Vue.use(Router)
 
@@ -28,7 +29,7 @@ const EmptyParentComponent = {
   template: '<router-view></router-view>',
 }
 
-export default new Router({
+const router = new Router({
   routes: [
     ...demoRoutes,
     {
@@ -80,12 +81,18 @@ export default new Router({
       name: 'Admin',
       path: '/admin',
       component: AppLayout,
+      meta: {
+        requiresAuth: true,
+      },
       children: [
         {
           name: 'dashboard',
           path: 'dashboard',
           component: lazyLoading('dashboard/Dashboard'),
           default: true,
+          meta: {
+            requiresAuth: true,
+          },
         },
         {
           name: 'statistics',
@@ -346,3 +353,17 @@ export default new Router({
     },
   ],
 })
+
+router.beforeEach((to, from, next) => {
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+    if (store.getters.isLoggedIn) {
+      next()
+      return
+    }
+    next('/auth/login')
+  } else {
+    next() 
+  }
+})
+
+export default router;

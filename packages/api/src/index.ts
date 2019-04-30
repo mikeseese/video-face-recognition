@@ -27,16 +27,54 @@ const dbConnectionString =
   app.use(passport.initialize());
   app.use(passport.session());
 
+  app.get("/api/account", (req, res) => {
+    if (!req.user || !req.isAuthenticated()) {
+      return res.sendStatus(401);
+    }
+
+    res.setHeader("Content-Type", "application/json");
+
+    // dont send the password hash or salt down
+    res.send(JSON.stringify({
+      user: req.user
+    }));
+  })
+
   app.get("/api/logout", (req, res) => {
     req.logout();
-    return res.send();
+    return res.redirect("/");
   });
 
-  app.post("/api/login", passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/login",
-    failureFlash: true
-  }));
+  app.post("/api/login", (req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        console.error(err);
+        return res.sendStatus(500);
+      }
+
+      if (!user) {
+        return res.sendStatus(401);
+      }
+
+      req.logIn(user, (err) => {
+        if (err) {
+          console.error(err);
+          return res.sendStatus(500);
+        }
+
+        res.setHeader("Content-Type", "application/json");
+
+        // dont send the password hash or salt down
+        res.send(JSON.stringify({
+          user: {
+            email: user.email,
+            id: user.id,
+            name: user.name,
+          }
+        }));
+      });
+    })(req, res, next);
+  });
 
   app.options("*", cors());
   app.listen(80, () => {

@@ -20,6 +20,9 @@
           <i class="bar"/>
         </div>
       </div>
+      <div>
+        <p class="error" v-text="error"></p>
+      </div>
       <div class="d-flex align--center justify--space-between">
         <button class="btn btn-primary" type="submit">
           {{ $t('auth.login') }}
@@ -32,10 +35,20 @@
 <script>
 export default {
   name: 'login',
+  created() {
+    // check to see if we're authenticated with our session already
+    this.$store.dispatch("login", {})
+    .then(() => {
+      this.$router.push("/");
+    }).catch((err) => {
+      console.log(err);
+    });
+  },
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+      error: ""
     }
   },
   computed: {
@@ -45,12 +58,14 @@ export default {
   },
   methods: {
     login: function() {
+      this.error = "";
       this.$store.dispatch("login", {
         email: this.email,
         password: this.password
       }).then(() => {
         this.$router.push("/");
       }).catch((err) => {
+        this.error = "Could not authenticate.";
         console.log(err);
       });
     }
@@ -60,6 +75,10 @@ export default {
 
 <style lang="scss">
 .login {
+
+  .error {
+    color: red;
+  }
 
   @include media-breakpoint-down(md) {
     width: 100%;

@@ -4,19 +4,15 @@ import {
   BaseEntity,
   ManyToOne,
   JoinColumn,
-  PrimaryGeneratedColumn
+  PrimaryColumn
 } from "typeorm";
 import { SessionEntity } from "typeorm-store";
 import { User } from "./user";
 
 @Entity()
 export class Session extends BaseEntity implements SessionEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn()
   public id!: string;
-
-  @ManyToOne(_type => User)
-  @JoinColumn()
-  public user!: User;
 
   @Column({ type: "timestamp with time zone", default: () => "CURRENT_TIMESTAMP" })
   public created!: Date;
