@@ -17,12 +17,14 @@
   "scripts": {
     "prepare": "lerna bootstrap",
     "build": "scripts/build.sh",
+    "build:api": "cd packages/api && yarn build",
     "build:core": "cd packages/core && yarn build",
     "build:dashborad": "cd packages/dashboard && yarn build",
     "build:persistence": "cd packages/persistence && yarn build",
     "preinstall": "node scripts/check-yarn.js",
     "clean:build": "./scripts/clean-build.sh",
     "clean:all": "./scripts/clean-all.sh",
+    "clean:build:api": "cd packages/api && rm -rf dist",
     "clean:build:core": "cd packages/core && rm -rf dist",
     "clean:build:persistence": "cd packages/persistence && rm -rf dist"
   }

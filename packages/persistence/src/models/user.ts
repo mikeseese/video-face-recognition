@@ -17,5 +17,8 @@ export class User extends BaseEntity {
   public passwordHash!: string;
 
   @Column()
+  public salt!: string;
+
+  @Column()
   public name!: string;
 }
