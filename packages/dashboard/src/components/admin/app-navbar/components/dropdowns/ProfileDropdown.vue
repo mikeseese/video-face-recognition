@@ -8,14 +8,12 @@
       position="bottom"
     >
       <div
-        v-for="option in options"
-        :key="option.name"
         class="dropdown-item plain-link-item"
       >
-        <router-link :to="{name: option.redirectTo}" class="plain-link"
-                     href="#">
-          {{ $t(`user.${option.name}`) }}
-        </router-link>
+        <a class="plain-link"
+                     href="/api/logout">
+          {{ $t(`user.logout`) }}
+        </a>
       </div>
     </vuestic-dropdown>
   </div>
@@ -39,7 +37,7 @@ export default {
         },
         {
           name: 'logout',
-          redirectTo: 'login',
+          redirectTo: '/api/logout',
         },
       ],
     },
