@@ -1,10 +1,10 @@
 <template>
   <div class="login">
     <h2>{{ $t('auth.welcome') }}</h2>
-    <form method="post" action="/auth/login" name="login">
+    <form name="login" @submit.prevent="login">
       <div class="form-group">
         <div class="input-group">
-          <input type="text" id="email" required="required"/>
+          <input type="text" id="email" required="required" v-model="email"/>
           <label class="control-label" for="email">
             {{ $t('auth.email') }}
           </label>
@@ -13,7 +13,7 @@
       </div>
       <div class="form-group">
         <div class="input-group">
-          <input type="password" id="password" required="required"/>
+          <input type="password" id="password" required="required" v-model="password"/>
           <label class="control-label" for="password">
             {{ $t('auth.password') }}
           </label>
@@ -32,6 +32,29 @@
 <script>
 export default {
   name: 'login',
+  data() {
+    return {
+      email: "",
+      password: ""
+    }
+  },
+  computed: {
+    isLoggedIn: function() {
+      return this.$store.getters.isLoggedIn;
+    }
+  },
+  methods: {
+    login: function() {
+      this.$store.dispatch("login", {
+        email: this.email,
+        password: this.password
+      }).then(() => {
+        this.$router.push("/");
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
 }
 </script>
 
