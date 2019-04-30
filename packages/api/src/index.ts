@@ -27,7 +27,12 @@ const dbConnectionString =
   app.use(passport.initialize());
   app.use(passport.session());
 
-  app.post("/login", passport.authenticate("local", {
+  app.get("/api/logout", (req, res) => {
+    req.logout();
+    return res.send();
+  });
+
+  app.post("/api/login", passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/login",
     failureFlash: true
