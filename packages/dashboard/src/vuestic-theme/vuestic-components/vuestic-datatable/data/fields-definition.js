@@ -7,32 +7,19 @@ export default {
       width: '4%',
     },
     {
+      name: '__component:timestamp',
+      title: 'Timestamp',
+      width: '24%',
+    },
+    {
       name: 'name',
-      sortField: 'name',
       width: '24%',
     },
     {
-      name: 'email',
-      sortField: 'email',
-      width: '24%',
-    },
-    {
-      name: 'address.line2',
-      title: 'city',
-      width: '24%',
-    },
-    {
-      name: 'salary',
-      title: 'score',
+      name: 'confidence',
       width: '24%',
     },
   ],
   sortFunctions: {
-    'name': function (item1, item2) {
-      return item1 >= item2 ? 1 : -1
-    },
-    'email': function (item1, item2) {
-      return item1 >= item2 ? 1 : -1
-    },
   },
 }

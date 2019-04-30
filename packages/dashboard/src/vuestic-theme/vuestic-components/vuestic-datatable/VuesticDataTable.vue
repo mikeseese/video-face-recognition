@@ -192,7 +192,7 @@ export default {
     controlsAlignmentClass () {
       return {
         'justify--space-between': this.filterInputShown,
-        'justify--end': !this.filterInputShown,
+        'hidden': !this.filterInputShown,
       }
     },
     moreParams () {
@@ -350,5 +350,9 @@ export default {
 .data-loading {
   opacity: .5;
   pointer-events: none;
+}
+
+.hidden {
+  display: none !important;
 }
 </style>

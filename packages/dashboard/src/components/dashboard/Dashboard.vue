@@ -1,65 +1,69 @@
 <template>
   <div class="dashboard">
 
-    <dashboard-info-widgets></dashboard-info-widgets>
-
-    <vuestic-widget class="no-padding no-v-padding">
-      <vuestic-tabs
-        :names="[$t('dashboard.dataVisualization'), $t('dashboard.usersAndMembers'), $t('dashboard.setupProfile'), $t('dashboard.features')]"
-        ref="tabs">
-        <div :slot="$t('dashboard.dataVisualization')">
-          <data-visualisation-tab></data-visualisation-tab>
-        </div>
-        <div :slot="$t('dashboard.usersAndMembers')">
-          <users-members-tab></users-members-tab>
-        </div>
-        <div :slot="$t('dashboard.setupProfile')">
-          <setup-profile-tab></setup-profile-tab>
-        </div>
-        <div :slot="$t('dashboard.features')">
-          <features-tab></features-tab>
-        </div>
-      </vuestic-tabs>
-    </vuestic-widget>
-
-    <dashboard-bottom-widgets></dashboard-bottom-widgets>
+    <div class="va-row">
+      <div class="flex md12 xs12">
+        <vuestic-widget :headerText="$t('tables.logs')">
+          <vuestic-data-table
+            :apiUrl="apiUrl"
+            :tableFields="tableFields"
+            :itemsPerPage="itemsPerPage"
+            :defaultPerPage="defaultTablePerPage"
+            :sortFunctions="sortFunctions"
+            :apiMode="apiMode"
+            :paginationPath="paginationPath"
+            :queryParams="queryParams"
+            :filterInputShown="filterInputShown"
+          >
+            <spring-spinner
+              slot="loading"
+              :animation-duration="2500"
+              :size="70"
+              color="#4ae387"
+            />
+          </vuestic-data-table>
+        </vuestic-widget>
+      </div>
+    </div>
 
   </div>
 </template>
 
 <script>
-import DashboardInfoWidgets from './DashboardInfoWidgets'
-import UsersMembersTab from './users-and-members-tab/UsersMembersTab.vue'
-import SetupProfileTab from './setup-profile-tab/SetupProfileTab.vue'
-import FeaturesTab from './features-tab/FeaturesTab.vue'
-import DataVisualisationTab
-  from './data-visualisation-tab/DataVisualisation.vue'
-import DashboardBottomWidgets from './DashboardBottomWidgets.vue'
+import Vue from 'vue'
+import BadgeColumn from '../tables/BadgeColumn.vue'
+import TimestampColumn from './Timestamp.vue'
+import { SpringSpinner } from 'epic-spinners'
+import FieldsDef
+  from '../../vuestic-theme/vuestic-components/vuestic-datatable/data/fields-definition'
+import ItemsPerPageDef
+  from '../../vuestic-theme/vuestic-components/vuestic-datatable/data/items-per-page-definition'
+import QueryParams from '../../vuestic-theme/vuestic-components/vuestic-datatable/data/query-params'
+
+Vue.component('badge-column', BadgeColumn)
+Vue.component('timestamp', TimestampColumn)
 
 export default {
   name: 'dashboard',
   components: {
-    DataVisualisationTab,
-    DashboardInfoWidgets,
-    UsersMembersTab,
-    SetupProfileTab,
-    FeaturesTab,
-    DashboardBottomWidgets,
+    SpringSpinner,
   },
 
   methods: {
-    launchEpicmaxToast () {
-      this.showToast(`Let's work together!`, {
-        icon: 'fa-star-o',
-        position: 'top-right',
-        duration: Infinity,
-        action: {
-          text: 'Hire us',
-          href: 'http://epicmax.co/#/contact',
-          class: 'vuestic-toasted-link',
-        },
-      })
-    },
+  },
+
+  data () {
+    return {
+      apiUrl: '/api/logs',
+      apiMode: true,
+      tableFields: FieldsDef.tableFields,
+      itemsPerPage: ItemsPerPageDef.itemsPerPage,
+      sortFunctions: FieldsDef.sortFunctions,
+      paginationPath: '',
+      defaultTablePerPage: 30,
+      queryParams: QueryParams,
+      filterInputShown: false,
+    }
   },
 }
 

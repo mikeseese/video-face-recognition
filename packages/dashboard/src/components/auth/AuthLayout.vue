@@ -1,9 +1,6 @@
 <template>
   <div class="auth-layout">
     <div class="nav d-lg-none">
-      <router-link :to="{path: '/'}">
-        <vuestic-icon-vuestic/>
-      </router-link>
     </div>
     <div class="main va-row">
       <div class="auth-content flex lg6 xs12 fill-height">

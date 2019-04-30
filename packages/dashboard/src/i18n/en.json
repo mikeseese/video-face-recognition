@@ -299,6 +299,7 @@
   "tables": {
     "basic": "Basic Table",
     "styled": "Colors, Icons, Labels",
+    "logs": "Logs",
     "advanced": "Search & Pagination",
     "headings": {
       "city": "City",
