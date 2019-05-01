@@ -66,6 +66,21 @@ services:
     depends_on:
       - persistence
 
+  api:
+    command: ["node", "packages/processing/dist/index.js"]
+    working_dir: /app
+    container_name: vfr-api
+    image: node:10
+    restart: always
+    networks:
+      - video-face-recognition
+    ports:
+      - 9004:80
+    volumes:
+      - ./:/app
+    depends_on:
+      - persistence
+
 networks:
   video-face-recognition:
 volumes:
