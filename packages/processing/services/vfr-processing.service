@@ -1,0 +1,14 @@
+[Unit]
+Description=Video Face Recognition Processing Service
+
+[Service]
+Type=simple
+User=mil
+Group=mil
+WorkingDirectory=/home/mil/vfr/packages/processing
+EnvironmentFile=/home/mil/vfr/packages/processing/services/vfr.conf
+ExecStart=/bin/bash -c "yarn start"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
