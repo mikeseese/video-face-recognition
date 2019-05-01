@@ -1,15 +1,10 @@
-import * as path from "path";
-import * as cv from "opencv4nodejs";
-import * as fr from "@video-face-recognition/face-recognition";
-import * as dotenv from "dotenv";
+import path from "path";
+import cv from "opencv4nodejs";
+import fr from "@video-face-recognition/face-recognition";
 import Session from "../lib/session";
 import "reflect-metadata";
 import { AccessLog, Identity, ConnectPersistence } from "@video-face-recognition/persistence";
-import {
-  MoreThanOrEqual
-} from "typeorm";
-
-dotenv.config();
+import pgpubsub from "pg-pubsub";
 
 fr.withCv(cv);
 fr.winKillProcessOnExit();
@@ -36,6 +31,16 @@ const dbConnectionString =
   process.env.VFR_POSTGRESDB_CONNECTION_STRING ||
   `postgresql://postgres:postgres@localhost:9001/vfr`;
 
+const pubsubInstance = new pgpubsub(dbConnectionString);
+pubsubInstance.addChannel(process.env.VFR_CHANNEL_AUTHENTICATED);
+
+interface IAuthenticated {
+  id: string;
+  timestamp: string;
+  name: string | null;
+  authorized: boolean;
+}
+
 const session = new Session(model);
 
 let done = false;
@@ -60,7 +65,7 @@ let done = false;
 
       if (identity.confidence >= minConfidenceThreshold && id) {
         // database has this identity, see when the last time it was reported
-        const log = await AccessLog.createQueryBuilder("log")
+        let log = await AccessLog.createQueryBuilder("log")
           .leftJoinAndSelect("log.identity", "identity")
           .where("identity.name = :name", { name: identity.name })
           .andWhere("log.timestamp >= :timestamp", {
@@ -70,12 +75,19 @@ let done = false;
 
         if (typeof log === "undefined") {
           // we havent reported this identity in awhile, report again
-          await AccessLog.create({
+          log = await AccessLog.create({
             timestamp: frameTime,
             authorized: id.authorized,
             identity: id,
             confidence: Math.floor(identity.confidence * 100)
           }).save();
+
+          pubsubInstance.publish(process.env.VFR_CHANNEL_AUTHENTICATED, {
+            id: log.id,
+            timestamp: frameTime.toISOString(),
+            authorized: id.authorized,
+            name: id.name
+          } as IAuthenticated);
         }
       }
       else {
@@ -90,12 +102,19 @@ let done = false;
           // we're either not sure about who this is or
           // the id is not in the database. it's been awhile
           // since we reported an unknown, lets report again
-          await AccessLog.create({
+          const log = await AccessLog.create({
             timestamp: frameTime,
             authorized: false,
             identity: null,
             confidence: Math.floor(identity.confidence * 100)
           }).save();
+
+          pubsubInstance.publish(process.env.VFR_CHANNEL_AUTHENTICATED, {
+            id: log.id,
+            timestamp: frameTime.toISOString(),
+            authorized: false,
+            name: null
+          } as IAuthenticated);
         }
       }
     });

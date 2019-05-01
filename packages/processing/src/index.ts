@@ -6,6 +6,7 @@ import path from "path";
 import tmp from "tmp";
 import { promisify } from "util";
 import * as Notify from "./notify";
+import { Semaphore } from "await-semaphore";
 const player = require("play-sound")({ player: "ffplay" });
 
 const client = new textToSpeech.TextToSpeechClient();
@@ -21,6 +22,8 @@ const dbConnectionString =
 
 const pubsubInstance = new pgpubsub(dbConnectionString);
 
+const semaphore = new Semaphore(1);
+
 interface IStateCommand {
   command: string;
 }
@@ -33,7 +36,10 @@ interface IAuthenticated {
 }
 
 const lastGreeted: {
-  [name: string]: Date
+  [name: string]: {
+    date: Date,
+    file: tmp.FileResult,
+  }
 } = {};
 
 function hasBeenLongEnoughSinceLastGreeting(greeting: Date) {
@@ -41,42 +47,75 @@ function hasBeenLongEnoughSinceLastGreeting(greeting: Date) {
   return elapsedTimeMs > 1 * 24 * 60 * 60 * 1000; // one day
 }
 
+pubsubInstance.addChannel(process.env.VFR_CHANNEL_STATE_COMMAND);
+pubsubInstance.addChannel(process.env.VFR_CHANNEL_AUTHENTICATED);
+
 // listen for command from api to gather, train, or recognize
 pubsubInstance.on(process.env.VFR_CHANNEL_STATE_COMMAND, (payload: IStateCommand) => {
   // publish state changes
 });
 
 // listen for auth events
-pubsubInstance.on(process.env.VFR_CHANNEL_AUTHENTICATED, (payload: IAuthenticated) => {
+pubsubInstance.on(process.env.VFR_CHANNEL_AUTHENTICATED, async (payload: IAuthenticated) => {
+  const release = await semaphore.acquire();
   if (payload.authorized && payload.name !== null && playAuthAudio) {
     if (typeof lastGreeted[payload.name] === "undefined" ||
-      hasBeenLongEnoughSinceLastGreeting(lastGreeted[payload.name]))
+      hasBeenLongEnoughSinceLastGreeting(lastGreeted[payload.name].date))
     {
-      lastGreeted[payload.name] = new Date();
+      if (typeof lastGreeted[payload.name] === "undefined") {
+        lastGreeted[payload.name] = {
+          date: new Date(),
+          file: tmp.fileSync({
+            mode: 0o644,
+            prefix: `vfr-access-`,
+            postfix: ".mp3"
+          })
+        };
 
-      // Construct the request
-      const request = {
-        input: {text: `Welcome ${payload.name} ${process.env.VFR_CUSTOM_GREETING}!`},
-        // Select the language and SSML Voice Gender (optional)
-        voice: {languageCode: 'en-US', ssmlGender: 'NEUTRAL'},
-        // Select the type of audio encoding
-        audioConfig: {audioEncoding: 'MP3'},
-      };
+        // Construct the request
+        const request = {
+          input: {
+            text: `Welcome, ${payload.name}, ${process.env.VFR_CUSTOM_GREETING}!`
+          },
+          // Select the language and SSML Voice Gender (optional)
+          voice: {
+            languageCode: "en-US",
+            ssmlGender: "NEUTRAL"
+          },
+          // Select the type of audio encoding
+          audioConfig: {
+            audioEncoding: "MP3"
+          },
+        };
 
-      // Performs the Text-to-Speech request
-      client.synthesizeSpeech(request, async (err, response) => {
-        if (err) {
-          console.error('ERROR:', err);
-          return;
-        }
+        // Performs the Text-to-Speech request
+        const response = await new Promise<any>((resolve, reject) => {
+          client.synthesizeSpeech(request, (err, response) => {
+            if (err) {
+              reject(err);
+            }
+            else {
+              resolve(response);
+            }
+          });
+        });
 
-        const file = tmp.fileSync();
+        await promisify(fs.writeFile)(lastGreeted[payload.name].file.name, response.audioContent, "binary");
 
-        await promisify(fs.writeFile)(file.name, response.audioContent, 'binary');
+      }
+      else {
+        lastGreeted[payload.name].date = new Date();
+      }
 
-        player.play(file.name, { ffplay: ["-nodisp", "-autoexit"] });
-
-        file.removeCallback();
+      await new Promise((resolve, reject) => {
+        player.play(lastGreeted[payload.name].file.name, { ffplay: ["-loglevel", "quiet", "-nodisp", "-autoexit"] }, (err) => {
+          if (err) {
+            reject(err);
+          }
+          else {
+            resolve();
+          }
+        });
       });
     }
   }
@@ -86,11 +125,19 @@ pubsubInstance.on(process.env.VFR_CHANNEL_AUTHENTICATED, (payload: IAuthenticate
     Notify.unauthPush(payload.id, payload.timestamp);
 
     if (playUnauthAudio) {
-      player.play(path.join(__dirname, "unauth.mp3"), { ffplay: ["-nodisp", "-autoexit"] });
+      const unAuthFile = path.join(__dirname, "..", "unauth.mp3");
+      await new Promise((resolve, reject) => {
+        player.play(unAuthFile, { ffplay: ["-loglevel", "quiet", "-nodisp", "-autoexit"] }, (err) => {
+          if (err) {
+            reject(err);
+          }
+          else {
+            resolve();
+          }
+        });
+      });
     }
   }
+
+  release();
 });
-
-
-pubsubInstance.addChannel(process.env.VFR_CHANNEL_STATE_COMMAND);
-pubsubInstance.addChannel(process.env.VFR_CHANNEL_UNAUTHENTICATED);

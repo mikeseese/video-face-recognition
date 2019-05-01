@@ -21,11 +21,13 @@
     "build:core": "cd packages/core && yarn build",
     "build:dashborad": "cd packages/dashboard && yarn build",
     "build:persistence": "cd packages/persistence && yarn build",
+    "build:processing": "cd packages/processing && yarn build",
     "preinstall": "node scripts/check-yarn.js",
     "clean:build": "./scripts/clean-build.sh",
     "clean:all": "./scripts/clean-all.sh",
     "clean:build:api": "cd packages/api && rm -rf dist",
     "clean:build:core": "cd packages/core && rm -rf dist",
-    "clean:build:persistence": "cd packages/persistence && rm -rf dist"
+    "clean:build:persistence": "cd packages/persistence && rm -rf dist",
+    "clean:build:processing": "cd packages/processing && rm -rf dist"
   }
 }

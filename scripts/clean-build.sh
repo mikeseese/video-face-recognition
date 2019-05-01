@@ -6,3 +6,4 @@ set -ex
 yarn clean:build:api
 yarn clean:build:core
 yarn clean:build:persistence
+yarn clean:build:processing

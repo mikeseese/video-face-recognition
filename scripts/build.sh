@@ -6,4 +6,5 @@ set -ex
 yarn build:persistence
 yarn build:api
 yarn build:core
+yarn build:processing
 docker-compose build

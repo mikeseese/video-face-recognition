@@ -3,6 +3,7 @@
     "lib": [ "dom", "es2017" ],
     "outDir": "./dist",
     "rootDir": "./src",
-    "sourceMap": true
+    "sourceMap": true,
+    "esModuleInterop": true
   }
 }
