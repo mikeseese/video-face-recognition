@@ -90,11 +90,11 @@ interface IStateCommand {
       return res.sendStatus(401);
     }
 
-    const name: string = req.query.name;
+    const name: string = req.body.name;
 
     pubsubInstance.publish(process.env.VFR_CHANNEL_STATE_COMMAND, {
       command: "gather",
-      name
+      data: name
     } as IStateCommand);
 
     res.sendStatus(200);
