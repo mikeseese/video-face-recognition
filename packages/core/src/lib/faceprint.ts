@@ -17,19 +17,28 @@ export default class Faceprint {
   }
 
   identity(): FaceIdentity {
-    const accumulatedDistributaions: number[] = Object.values(this.predictionDistributions).map((distances) => {
-      return distances.reduce((sum: number, val: number) => val + (sum || 0));
-    });
+    if (Object.keys(this.predictionDistributions).length > 0) {
+      const accumulatedDistributaions: number[] = Object.values(this.predictionDistributions).map((distances) => {
+        return distances.reduce((sum: number, val: number) => val + (sum || 0));
+      });
 
-    const totalDistance = accumulatedDistributaions.reduce((sum: number, val: number) => val + (sum || 0));
+      const totalDistance = accumulatedDistributaions.reduce((sum: number, val: number) => val + (sum || 0));
 
-    const minDistance = Math.min(...accumulatedDistributaions);
-    const name = Object.keys(this.predictionDistributions)[accumulatedDistributaions.indexOf(minDistance)];
+      const minDistance = Math.min(...accumulatedDistributaions);
+      const name = Object.keys(this.predictionDistributions)[accumulatedDistributaions.indexOf(minDistance)];
 
-    return {
-      name,
-      confidence: 1 - (minDistance / totalDistance)
-    };
+      return {
+        name,
+        confidence: 1 - (minDistance / totalDistance)
+      };
+    }
+    else {
+      // this happens with an empty trained model
+      return {
+        name: null,
+        confidence: 0,
+      }
+    }
   }
 
   addPredictions(rect: fr.Rect, chip: fr.ImageRGB, predictions: fr.FacePrediction[]) {
