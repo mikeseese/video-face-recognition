@@ -204,15 +204,7 @@ pubsubInstance.on(process.env.VFR_CHANNEL_AUTHENTICATED, async (payload: IAuthen
         });
       }
       else if (unAuthFile.endsWith(".mp4")) {
-        spawnSync("/usr/bin/xinit", [
-          "-e",
-          "/bin/bash",
-          "-c",
-          "'ffplay -loglevel quiet -autoexit'",
-          "$*",
-          "--",
-          ":2"
-        ])
+        execSync(`/usr/bin/xinit -e /bin/bash -c "ffplay -loglevel quiet -autoexit ${unAuthFile}" $* -- :2`);
       }
     }
   }
