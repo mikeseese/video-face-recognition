@@ -1,9 +1,9 @@
 
-import * as cv from "opencv4nodejs";
-import * as fse from "fs-extra";
-import * as path from "path";
-import * as fr from "@video-face-recognition/face-recognition";
-import * as dotenv from "dotenv";
+import cv from "opencv4nodejs";
+import fse from "fs-extra";
+import path from "path";
+import fr from "@video-face-recognition/face-recognition";
+import dotenv from "dotenv";
 
 dotenv.config();
 

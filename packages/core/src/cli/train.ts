@@ -1,7 +1,7 @@
-import * as fs from "fs";
-import * as path from "path";
-import * as cv from "opencv4nodejs";
-import * as fr from "@video-face-recognition/face-recognition";
+import fs from "fs";
+import path from "path";
+import cv from "opencv4nodejs";
+import fr from "@video-face-recognition/face-recognition";
 import "reflect-metadata";
 import { ConnectPersistence, Identity } from "@video-face-recognition/persistence";
 
