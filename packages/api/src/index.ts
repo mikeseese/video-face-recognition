@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import passport from "passport";
 import express from "express";
+import pgpubsub from "pg-pubsub";
 import "reflect-metadata";
 import { ConnectPersistence, AccessLog } from "@video-face-recognition/persistence";
 
@@ -14,6 +15,14 @@ import { init as initializePassport } from "./passport";
 const dbConnectionString =
   process.env.VFR_POSTGRESDB_CONNECTION_STRING ||
   `postgresql://postgres:postgres@vfr-persistence:5432/vfr`;
+
+const pubsubInstance = new pgpubsub(dbConnectionString);
+pubsubInstance.addChannel(process.env.VFR_CHANNEL_STATE_COMMAND);
+
+interface IStateCommand {
+  command: "gather" | "train" | "recognize";
+  data?: string;
+}
 
 (async () => {
   const typeORM = await ConnectPersistence(dbConnectionString);
@@ -77,11 +86,42 @@ const dbConnectionString =
   });
 
   app.post("/api/gather", (req, res) => {
-    //
+    if (!req.user || !req.isAuthenticated()) {
+      return res.sendStatus(401);
+    }
+
+    const name: string = req.query.name;
+
+    pubsubInstance.publish(process.env.VFR_CHANNEL_STATE_COMMAND, {
+      command: "gather",
+      name
+    } as IStateCommand);
+
+    res.sendStatus(200);
   });
 
   app.post("/api/train", (req, res) => {
-    //
+    if (!req.user || !req.isAuthenticated()) {
+      return res.sendStatus(401);
+    }
+
+    pubsubInstance.publish(process.env.VFR_CHANNEL_STATE_COMMAND, {
+      command: "train",
+    } as IStateCommand);
+
+    res.sendStatus(200);
+  });
+
+  app.post("/api/recognize", (req, res) => {
+    if (!req.user || !req.isAuthenticated()) {
+      return res.sendStatus(401);
+    }
+
+    pubsubInstance.publish(process.env.VFR_CHANNEL_STATE_COMMAND, {
+      command: "recognize",
+    } as IStateCommand);
+
+    res.sendStatus(200);
   });
 
   app.get("/api/logs", async (req, res) => {
