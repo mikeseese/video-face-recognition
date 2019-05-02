@@ -1,5 +1,4 @@
 import pgpubsub from "pg-pubsub";
-import dotenv from "dotenv";
 import textToSpeech from "@google-cloud/text-to-speech";
 import fs from "fs";
 import path from "path";
@@ -11,8 +10,6 @@ import { spawnSync } from "child_process";
 const player = require("play-sound")({ player: "ffplay" });
 
 const client = new textToSpeech.TextToSpeechClient();
-
-dotenv.config();
 
 const playUnauthAudio = process.env.VFR_PLAY_UNAUTH_SOUND !== "false";
 const playAuthAudio = process.env.VFR_PLAY_AUTH_SOUND !== "false";
