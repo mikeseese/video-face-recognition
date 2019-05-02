@@ -6,7 +6,7 @@ import tmp from "tmp";
 import { promisify } from "util";
 import * as Notify from "./notify";
 import { Semaphore } from "await-semaphore";
-import { spawnSync } from "child_process";
+import { spawnSync, execSync } from "child_process";
 const player = require("play-sound")({ player: "ffplay" });
 
 const client = new textToSpeech.TextToSpeechClient();
@@ -89,7 +89,7 @@ pubsubInstance.on(process.env.VFR_CHANNEL_STATE_COMMAND, async (payload: IStateC
       state = "gather";
       stopServices();
       const name = payload.data!;
-      spawnSync("sed", ["-i", `'/NAME=/c\\NAME=${name}'`, gatherConfigFile])
+      execSync(`sed -i '/NAME=/cNAME=${name}' "${gatherConfigFile}"`);
       spawnSync("sudo", ["/bin/systemctl", "start", "vfr-gather.service"]);
       await waitUntilServiceStops("vfr-gather.service");
       state = "stopped";
