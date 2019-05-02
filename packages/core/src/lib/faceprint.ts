@@ -18,7 +18,10 @@ export default class Faceprint {
 
   identity(): FaceIdentity {
     console.log(this.predictionDistributions);
+    console.log(Object.keys(this.predictionDistributions));
+    console.log(Object.keys(this.predictionDistributions).length);
     if (Object.keys(this.predictionDistributions).length > 0) {
+      console.log("here");
       const accumulatedDistributaions: number[] = Object.values(this.predictionDistributions).map((distances) => {
         return distances.reduce((sum: number, val: number) => val + (sum || 0));
       });
