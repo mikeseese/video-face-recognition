@@ -17,6 +17,7 @@ export default class Faceprint {
   }
 
   identity(): FaceIdentity {
+    console.log(this.predictionDistributions);
     if (Object.keys(this.predictionDistributions).length > 0) {
       const accumulatedDistributaions: number[] = Object.values(this.predictionDistributions).map((distances) => {
         return distances.reduce((sum: number, val: number) => val + (sum || 0));
@@ -45,7 +46,9 @@ export default class Faceprint {
     this.numPredictions++;
     this.rect = rect;
     this.chip = chip;
+    console.log(`Num Faces: ${predictions.length}`);
     for (const prediction of predictions) {
+      console.log(`Predictions class: ${prediction.className}`);
       if (Array.isArray(this.predictionDistributions[prediction.className])) {
         this.predictionDistributions[prediction.className].push(prediction.distance);
       }
