@@ -17,25 +17,14 @@
           <span>{{ $t('menu.train') }}</span>
         </span>
       </sidebar-link>
-      <sidebar-link-group>
+      <sidebar-link
+        :to="{ name: 'system' }">
         <span slot="title">
           <span
             class="sidebar-menu-item-icon vuestic-icon vuestic-icon-settings"></span>
-          <span>{{ $t('menu.config') }}</span>
+          <span>{{ $t('menu.system') }}</span>
         </span>
-        <sidebar-link
-          :to="{ name: 'settings' }">
-          <span slot="title">
-            <span>{{ $t('menu.settings') }}</span>
-          </span>
-        </sidebar-link>
-        <sidebar-link
-          :to="{ name: 'system' }">
-          <span slot="title">
-            <span>{{ $t('menu.system') }}</span>
-          </span>
-        </sidebar-link>
-      </sidebar-link-group>
+      </sidebar-link>
     </template>
   </vuestic-sidebar>
 </template>

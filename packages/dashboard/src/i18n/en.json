@@ -117,6 +117,15 @@
       "customFirstDay": "Custom first day",
       "customDateFormat": "Custom date format"
     },
+    "gather": {
+      "title": "Add a New Identity",
+      "name": "Identity Name",
+      "button": "Start Gathering Images"
+    },
+    "train": {
+      "title": "Train the System with New Identities",
+      "button": "Start Training"
+    },
     "inputs": {
       "emailValidatedSuccess": "Email (validated with success)",
       "emailValidated": "Email (validated)",
@@ -299,7 +308,7 @@
   "tables": {
     "basic": "Basic Table",
     "styled": "Colors, Icons, Labels",
-    "logs": "Logs",
+    "logs": "Access Logs",
     "advanced": "Search & Pagination",
     "headings": {
       "city": "City",

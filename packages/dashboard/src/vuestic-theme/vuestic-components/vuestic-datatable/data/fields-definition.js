@@ -12,7 +12,7 @@ export default {
       width: '24%',
     },
     {
-      name: 'name',
+      name: '__component:name',
       width: '24%',
     },
     {

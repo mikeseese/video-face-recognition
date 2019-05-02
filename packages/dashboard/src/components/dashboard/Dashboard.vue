@@ -33,6 +33,7 @@
 import Vue from 'vue'
 import BadgeColumn from '../tables/BadgeColumn.vue'
 import TimestampColumn from './Timestamp.vue'
+import NameColumn from './Name.vue'
 import { SpringSpinner } from 'epic-spinners'
 import FieldsDef
   from '../../vuestic-theme/vuestic-components/vuestic-datatable/data/fields-definition'
@@ -42,6 +43,7 @@ import QueryParams from '../../vuestic-theme/vuestic-components/vuestic-datatabl
 
 Vue.component('badge-column', BadgeColumn)
 Vue.component('timestamp', TimestampColumn)
+Vue.component('name', NameColumn)
 
 export default {
   name: 'dashboard',

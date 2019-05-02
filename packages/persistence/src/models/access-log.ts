@@ -19,7 +19,10 @@ export class AccessLog extends BaseEntity {
   @Column()
   public authorized!: boolean;
 
-  @ManyToOne(_type => Identity, { nullable: true })
+  @ManyToOne(_type => Identity, {
+    nullable: true,
+    eager: true
+  })
   @JoinColumn()
   public identity?: Identity;
 

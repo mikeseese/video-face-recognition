@@ -13,6 +13,7 @@ const client = new textToSpeech.TextToSpeechClient();
 
 const playUnauthAudio = process.env.VFR_PLAY_UNAUTH_SOUND !== "false";
 const playAuthAudio = process.env.VFR_PLAY_AUTH_SOUND !== "false";
+const unAuthFile = path.join(__dirname, "..", process.env.VFR_UNAUTH_FILE);
 
 const dbConnectionString =
   process.env.VFR_POSTGRESDB_CONNECTION_STRING ||
@@ -190,17 +191,21 @@ pubsubInstance.on(process.env.VFR_CHANNEL_AUTHENTICATED, async (payload: IAuthen
     Notify.unauthPush(payload.id, payload.timestamp);
 
     if (playUnauthAudio) {
-      const unAuthFile = path.join(__dirname, "..", "unauth.mp3");
-      await new Promise((resolve, reject) => {
-        player.play(unAuthFile, { ffplay: ["-loglevel", "quiet", "-nodisp", "-autoexit"] }, (err) => {
-          if (err) {
-            reject(err);
-          }
-          else {
-            resolve();
-          }
+      if (unAuthFile.endsWith(".mp3")) {
+        await new Promise((resolve, reject) => {
+          player.play(unAuthFile, { ffplay: ["-loglevel", "quiet", "-nodisp", "-autoexit"] }, (err) => {
+            if (err) {
+              reject(err);
+            }
+            else {
+              resolve();
+            }
+          });
         });
-      });
+      }
+      else if (unAuthFile.endsWith(".mp4")) {
+        // /usr/bin/xinit -e /bin/bash -c "yarn gather /home/mike/school/eel6905/vfr/vfr/.data/training-images $NAME" $* -- :2
+      }
     }
   }
 
