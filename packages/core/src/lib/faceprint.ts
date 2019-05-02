@@ -17,24 +17,54 @@ export default class Faceprint {
   }
 
   identity(): FaceIdentity {
-    console.log(this.predictionDistributions);
-    console.log(Object.keys(this.predictionDistributions));
-    console.log(Object.keys(this.predictionDistributions).length);
     if (Object.keys(this.predictionDistributions).length > 0) {
-      console.log("here");
-      const accumulatedDistributaions: number[] = Object.values(this.predictionDistributions).map((distances) => {
-        return distances.reduce((sum: number, val: number) => val + (sum || 0));
+      const distributions = Object.entries(this.predictionDistributions).map(([name, distances]) => {
+        return {
+          name,
+          mean: distances.reduce((sum: number, val: number) => val + (sum || 0)) / distances.length,
+        };
       });
 
-      const totalDistance = accumulatedDistributaions.reduce((sum: number, val: number) => val + (sum || 0));
+      distributions.sort((a, b) => a.mean - b.mean);
 
-      const minDistance = Math.min(...accumulatedDistributaions);
-      const name = Object.keys(this.predictionDistributions)[accumulatedDistributaions.indexOf(minDistance)];
+      // 0.6 threshold from https://blog.dlib.net/2017/02/high-quality-face-recognition-with-deep.html
+      const validPredictions = distributions.filter((distribution) => distribution.mean <= 0.6);
 
-      return {
-        name,
-        confidence: 1 - (minDistance / totalDistance)
-      };
+      if (validPredictions.length > 0) {
+        // let's give it a confidence soley based on distance.
+        // simple linear scale: 0.6 is 60%, 0.0 is 100%
+        const normalConfidence = -0.4 / 0.6 * validPredictions[0].mean + 1.0;
+
+        if (validPredictions.length > 1) {
+          // we have at least one other valid prediction, lets
+          // decrease the confidence based on the distance between the two
+          // i would consider (emperically) a distance delta of 0.2 to
+          // be extensive. a distance delta of 0.0 would be indistinguishable
+          // so a difference delta of 0 would be 0% confident 🤷‍♂ and 0.2 would be
+          // no different than just having one prediction
+          const distanceDelta = (validPredictions[1].mean - validPredictions[0].mean);
+          const adjustedConfidence = Math.min(1.0, distanceDelta * 5) * normalConfidence;
+          return {
+            name: validPredictions[0].name,
+            confidence: adjustedConfidence,
+          };
+        }
+        else {
+          // only prediction, dont adjust the confidence
+          return {
+            name: validPredictions[0].name,
+            confidence: normalConfidence,
+          };
+        }
+      }
+      else {
+        // only valid prediction, let's give it a confidence soley
+        // based on distance
+        return {
+          name: null,
+          confidence: 0,
+        };
+      }
     }
     else {
       // this happens with an empty trained model
@@ -49,9 +79,7 @@ export default class Faceprint {
     this.numPredictions++;
     this.rect = rect;
     this.chip = chip;
-    console.log(`Num Faces: ${predictions.length}`);
     for (const prediction of predictions) {
-      console.log(`Predictions class: ${prediction.className}`);
       if (Array.isArray(this.predictionDistributions[prediction.className])) {
         this.predictionDistributions[prediction.className].push(prediction.distance);
       }
