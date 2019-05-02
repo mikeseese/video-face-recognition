@@ -28,12 +28,13 @@ export default class Faceprint {
       distributions.sort((a, b) => a.mean - b.mean);
 
       // 0.6 threshold from https://blog.dlib.net/2017/02/high-quality-face-recognition-with-deep.html
-      const validPredictions = distributions.filter((distribution) => distribution.mean <= 0.6);
+      // i bumped it to 0.8 due to experience
+      const validPredictions = distributions.filter((distribution) => distribution.mean <= 0.8);
 
       if (validPredictions.length > 0) {
         // let's give it a confidence soley based on distance.
-        // simple linear scale: 0.6 is 60%, 0.0 is 100%
-        const normalConfidence = -0.4 / 0.6 * validPredictions[0].mean + 1.0;
+        // simple linear scale: 0.6 is 75%, 0.0 is 100%
+        const normalConfidence = -0.25 / 0.6 * validPredictions[0].mean + 1.0;
 
         if (validPredictions.length > 1) {
           // we have at least one other valid prediction, lets
