@@ -89,7 +89,7 @@ pubsubInstance.on(process.env.VFR_CHANNEL_STATE_COMMAND, async (payload: IStateC
       state = "gather";
       stopServices();
       const name = payload.data!;
-      spawnSync("sed", ["-i", `'/NAME=/c\\NAME=${name}`, gatherConfigFile])
+      spawnSync("sed", ["-i", `'/NAME=/c\\NAME=${name}'`, gatherConfigFile])
       spawnSync("sudo", ["/bin/systemctl", "start", "vfr-gather.service"]);
       await waitUntilServiceStops("vfr-gather.service");
       state = "stopped";
@@ -204,7 +204,15 @@ pubsubInstance.on(process.env.VFR_CHANNEL_AUTHENTICATED, async (payload: IAuthen
         });
       }
       else if (unAuthFile.endsWith(".mp4")) {
-        // /usr/bin/xinit -e /bin/bash -c "yarn gather /home/mike/school/eel6905/vfr/vfr/.data/training-images $NAME" $* -- :2
+        spawnSync("/usr/bin/xinit", [
+          "-e",
+          "/bin/bash",
+          "-c",
+          "'ffplay -loglevel quiet -autoexit'",
+          "$*",
+          "--",
+          ":2"
+        ])
       }
     }
   }
