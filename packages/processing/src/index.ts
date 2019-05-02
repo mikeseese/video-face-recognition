@@ -7,6 +7,7 @@ import tmp from "tmp";
 import { promisify } from "util";
 import * as Notify from "./notify";
 import { Semaphore } from "await-semaphore";
+import { spawnSync } from "child_process";
 const player = require("play-sound")({ player: "ffplay" });
 
 const client = new textToSpeech.TextToSpeechClient();
@@ -20,12 +21,23 @@ const dbConnectionString =
   process.env.VFR_POSTGRESDB_CONNECTION_STRING ||
   `postgresql://postgres:postgres@localhost:9001/vfr`;
 
+const gatherConfigFile = path.join(
+  __dirname, // /packages/processing/dist
+  "..",
+  "..",
+  "core",
+  "services",
+  "vfr-gather.conf"
+);
+
 const pubsubInstance = new pgpubsub(dbConnectionString);
 
 const semaphore = new Semaphore(1);
+let state: "gather" | "train" | "recognize" | "stopped" = "recognize";
 
 interface IStateCommand {
-  command: string;
+  command: "gather" | "train" | "recognize";
+  data?: string;
 }
 
 interface IAuthenticated {
@@ -50,9 +62,65 @@ function hasBeenLongEnoughSinceLastGreeting(greeting: Date) {
 pubsubInstance.addChannel(process.env.VFR_CHANNEL_STATE_COMMAND);
 pubsubInstance.addChannel(process.env.VFR_CHANNEL_AUTHENTICATED);
 
+function stopServices() {
+  spawnSync("sudo", ["/bin/systemctl", "stop", "vfr-recognize.service"]);
+  spawnSync("sudo", ["/bin/systemctl", "stop", "vfr-train.service"]);
+  spawnSync("sudo", ["/bin/systemctl", "stop", "vfr-gather.service"]);
+}
+
+async function waitUntilServiceStops(service: string) {
+  // systemctl is-active --quiet service
+  let isRunning = true;
+  while (isRunning) {
+    const result = spawnSync("systemctl", ["is-active", "--quiet", service]);
+    isRunning = result.status === 0;
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+  }
+}
+
 // listen for command from api to gather, train, or recognize
-pubsubInstance.on(process.env.VFR_CHANNEL_STATE_COMMAND, (payload: IStateCommand) => {
+pubsubInstance.on(process.env.VFR_CHANNEL_STATE_COMMAND, async (payload: IStateCommand) => {
   // publish state changes
+  switch (payload.command) {
+    case "gather": {
+      if (state === "gather" || state === "train") {
+        return;
+      }
+
+      state = "gather";
+      stopServices();
+      const name = payload.data!;
+      spawnSync("sed", ["-i", `'/NAME=/c\\NAME=${name}`, gatherConfigFile])
+      spawnSync("sudo", ["/bin/systemctl", "start", "vfr-gather.service"]);
+      await waitUntilServiceStops("vfr-gather.service");
+      state = "stopped";
+      break;
+    }
+    case "train": {
+      if (state === "train") {
+        return;
+      }
+
+      state = "train";
+      stopServices();
+      spawnSync("sudo", ["/bin/systemctl", "start", "vfr-train.service"]);
+      await waitUntilServiceStops("vfr-train.service");
+      state = "recognize";
+      spawnSync("sudo", ["/bin/systemctl", "start", "vfr-recognize.service"]);
+      break;
+    }
+    case "recognize": {
+      if (state === "recognize" || state === "train") {
+        return;
+      }
+
+      state = "recognize";
+      stopServices();
+      spawnSync("sudo", ["/bin/systemctl", "start", "vfr-recognize.service"]);
+      break;
+    }
+  }
 });
 
 // listen for auth events
