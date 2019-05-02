@@ -72,6 +72,28 @@ const store = new Vuex.Store({
         resolve()
       })
     },
+    gather({commit}, data) {
+      return new Promise((resolve, reject) => {
+        axios({url: "/api/gather", data, method: "POST" })
+        .then(() => {
+          resolve();
+        })
+        .catch(err => {
+          console.err(err);
+        })
+      })
+    },
+    train({commit}) {
+      return new Promise((resolve, reject) => {
+        axios({url: "/api/train", data: {}, method: "POST" })
+        .then(() => {
+          resolve();
+        })
+        .catch(err => {
+          console.err(err);
+        })
+      })
+    },
   }
 })
 

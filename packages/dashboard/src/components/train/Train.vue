@@ -30,11 +30,11 @@
                   </p>
                   <div class="form-group form-group-w-btn">
                     <div class="input-group">
-                      <input id="input-w-btn" required/>
+                      <input id="input-w-btn" required v-model="gatherName" />
                       <label class="control-label" for="input-w-btn">{{'forms.gather.name'
                         | translate}}</label><i class="bar"></i>
                     </div>
-                    <div class="btn btn-micro btn-primary">
+                    <div class="btn btn-micro btn-primary" v-on:click="gather">
                       <strong>{{'forms.gather.button' | translate}}</strong>
                     </div>
                   </div>
@@ -63,7 +63,7 @@
                     The VFR system will resume normal detection once the training
                     has completed.
                   </p>
-                  <div class="form-group form-group-w-btn">
+                  <div class="form-group form-group-w-btn" v-on:click="train">
                     <div class="btn btn-micro btn-primary" style="margin: auto;">
                       <strong>{{'forms.train.button' | translate}}</strong>
                     </div>
@@ -83,5 +83,20 @@
 <script>
 export default {
   name: 'train',
+  data() {
+    return {
+      gatherName: ""
+    }
+  },
+  methods: {
+    gather: function() {
+      this.$store.dispatch("gather", {
+        name: this.gatherName
+      });
+    },
+    train: function() {
+      this.$store.dispatch("train");
+    },
+  }
 }
 </script>
