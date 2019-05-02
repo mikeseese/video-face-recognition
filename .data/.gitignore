@@ -2,3 +2,4 @@
 !training-images
 !persistence
 !.gitignore
+!model.json.sample
