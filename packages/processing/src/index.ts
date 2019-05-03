@@ -14,6 +14,11 @@ const client = new textToSpeech.TextToSpeechClient();
 const playUnauthAudio = process.env.VFR_PLAY_UNAUTH_SOUND !== "false";
 const playAuthAudio = process.env.VFR_PLAY_AUTH_SOUND !== "false";
 const unAuthFile = path.join(__dirname, "..", process.env.VFR_UNAUTH_FILE);
+const trainingStartedFile = path.join(__dirname, "..", "training-start.mp3");
+const training25PercentFile = path.join(__dirname, "..", "training-25-percent.mp3");
+const training50PercentFile = path.join(__dirname, "..", "training-50-percent.mp3");
+const training75PercentFile = path.join(__dirname, "..", "training-75-percent.mp3");
+const trainingCompleteFile = path.join(__dirname, "..", "training-complete.mp3");
 
 const dbConnectionString =
   process.env.VFR_POSTGRESDB_CONNECTION_STRING ||
@@ -43,6 +48,11 @@ interface IAuthenticated {
   timestamp: string;
   name: string | null;
   authorized: boolean;
+}
+
+interface ITrainingStatus {
+  completed: number;
+  total: number;
 }
 
 const lastGreeted: {
@@ -77,6 +87,45 @@ async function waitUntilServiceStops(service: string) {
   }
 }
 
+async function playFile(file: string) {
+  await new Promise((resolve, reject) => {
+    if (file.endsWith(".mp3")) {
+      player.play(file, { ffplay: ["-loglevel", "quiet", "-nodisp", "-autoexit"] }, (err) => {
+        if (err) {
+          reject(err);
+        }
+        else {
+          resolve();
+        }
+      });
+    }
+    else if (file.endsWith(".mp4")) {
+      execSync(`/usr/bin/xinit -e /bin/bash -c "ffplay -loglevel quiet -autoexit ${file}" $* -- :2`);
+    }
+  });
+}
+
+pubsubInstance.on(process.env.VFR_CHANNEL_TRAINING_STATUS, async (payload: ITrainingStatus) => {
+  const release = await semaphore.acquire();
+
+  if (payload.total >= 4) {
+    if (payload.completed === Math.ceil(payload.total * 0.25)) {
+      await playFile(training25PercentFile);
+    }
+    else if (payload.completed === Math.ceil(payload.total * 0.75)) {
+      await playFile(training75PercentFile);
+    }
+  }
+
+  if (payload.total >= 2) {
+    if (payload.completed === Math.ceil(payload.total * 0.50)) {
+      await playFile(training50PercentFile);
+    }
+  }
+
+  release();
+});
+
 // listen for command from api to gather, train, or recognize
 pubsubInstance.on(process.env.VFR_CHANNEL_STATE_COMMAND, async (payload: IStateCommand) => {
   // publish state changes
@@ -102,8 +151,10 @@ pubsubInstance.on(process.env.VFR_CHANNEL_STATE_COMMAND, async (payload: IStateC
 
       state = "train";
       stopServices();
+      await playFile(trainingStartedFile);
       spawnSync("sudo", ["/bin/systemctl", "start", "vfr-train.service"]);
       await waitUntilServiceStops("vfr-train.service");
+      await playFile(trainingCompleteFile);
       state = "recognize";
       spawnSync("sudo", ["/bin/systemctl", "start", "vfr-recognize.service"]);
       break;
@@ -173,16 +224,7 @@ pubsubInstance.on(process.env.VFR_CHANNEL_AUTHENTICATED, async (payload: IAuthen
         lastGreeted[payload.name].date = new Date();
       }
 
-      await new Promise((resolve, reject) => {
-        player.play(lastGreeted[payload.name].file.name, { ffplay: ["-loglevel", "quiet", "-nodisp", "-autoexit"] }, (err) => {
-          if (err) {
-            reject(err);
-          }
-          else {
-            resolve();
-          }
-        });
-      });
+      await playFile(lastGreeted[payload.name].file.name);
     }
   }
   else if (!payload.authorized) {
@@ -191,21 +233,7 @@ pubsubInstance.on(process.env.VFR_CHANNEL_AUTHENTICATED, async (payload: IAuthen
     Notify.unauthPush(payload.id, payload.timestamp);
 
     if (playUnauthAudio) {
-      if (unAuthFile.endsWith(".mp3")) {
-        await new Promise((resolve, reject) => {
-          player.play(unAuthFile, { ffplay: ["-loglevel", "quiet", "-nodisp", "-autoexit"] }, (err) => {
-            if (err) {
-              reject(err);
-            }
-            else {
-              resolve();
-            }
-          });
-        });
-      }
-      else if (unAuthFile.endsWith(".mp4")) {
-        execSync(`/usr/bin/xinit -e /bin/bash -c "ffplay -loglevel quiet -autoexit ${unAuthFile}" $* -- :2`);
-      }
+      await playFile(unAuthFile);
     }
   }
 

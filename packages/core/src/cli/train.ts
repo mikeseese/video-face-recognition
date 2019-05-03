@@ -4,12 +4,18 @@ import cv from "opencv4nodejs";
 import fr from "@video-face-recognition/face-recognition";
 import "reflect-metadata";
 import { ConnectPersistence, Identity } from "@video-face-recognition/persistence";
+import pgpubsub from "pg-pubsub";
 
 fr.withCv(cv);
 fr.winKillProcessOnExit();
 
 const recognizer = fr.FaceRecognizer();
 const detector = fr.FaceDetector();
+
+interface ITrainingStatus {
+  completed: number;
+  total: number;
+}
 
 const expectedNumArgs = 2;
 if (process.argv.length - 2 !== expectedNumArgs) {
@@ -22,6 +28,9 @@ const modelLocation = path.resolve(process.argv[3]);
 const dbConnectionString =
   process.env.VFR_POSTGRESDB_CONNECTION_STRING ||
   `postgresql://postgres:postgres@localhost:9001/vfr`;
+
+const pubsubInstance = new pgpubsub(dbConnectionString);
+pubsubInstance.addChannel(process.env.VFR_CHANNEL_TRAINING_STATUS);
 
 if (fs.existsSync(datasetLocation)) {
   const classNames = fs.readdirSync(datasetLocation).filter((f) => f !== "." && f !== "..");
@@ -48,6 +57,11 @@ if (fs.existsSync(datasetLocation)) {
     }).filter(f => f !== null);
 
     recognizer.addFaces(faceChips, name);
+
+    pubsubInstance.publish(process.env.VFR_CHANNEL_TRAINING_STATUS, {
+      completed: i + 1,
+      total: classNames.length,
+    } as ITrainingStatus);
   }
 
   const modelState = recognizer.serialize();
