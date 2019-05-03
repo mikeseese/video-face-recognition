@@ -73,7 +73,7 @@ if (fs.existsSync(datasetLocation)) {
 (async () => {
   console.log(`Adding identities to the db`);
   if (fs.existsSync(modelLocation)) {
-    await ConnectPersistence(dbConnectionString);
+    const connection = await ConnectPersistence(dbConnectionString);
 
     const model: fr.FaceDescriptor[] = require(modelLocation);
 
@@ -94,5 +94,8 @@ if (fs.existsSync(datasetLocation)) {
         console.log(`Identity ${descriptor.className} already added to DB`);
       }
     }
+
+    await pubsubInstance.close();
+    await connection.close();
   }
 })();
