@@ -2,10 +2,9 @@
 
 This repository contains the setup and admin scripts for managing the Video Face Recognition (VFR) system. The VFR system was created as an independent study for my Master of Science program at the University of Florida. The target is a NVIDIA Jetson TX2 running Ubuntu 16.04.
 
-## Active Maintenance
-The VFR system will likely not be actively maintained by the original author ([@seesemichaelj](https://github.com/seesemichaelj)) after the hardware system is delivered as part of his independent study, so the system may be out of date if you're stumbling across this.
+## :warning: Repository Archived
 
-Contributors are definitely welcome! I'm active on GitHub and will review PRs in my free time!
+This repository is now archived; no pull requests will be considered.
 
 ## VFR Components
 
